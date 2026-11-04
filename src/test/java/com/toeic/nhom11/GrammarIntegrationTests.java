@@ -98,6 +98,11 @@ class GrammarIntegrationTests {
     @Test void guestCanReadAndAdminRequiresLogin() throws Exception {
         mvc.perform(get("/grammar")).andExpect(status().isOk()).andExpect(view().name("grammar/index"));
         mvc.perform(get("/admin/grammar")).andExpect(status().is3xxRedirection());
+        mvc.perform(get("/progress")).andExpect(status().is3xxRedirection());
+        mvc.perform(get("/exams")).andExpect(status().is3xxRedirection());
+        mvc.perform(get("/login")).andExpect(status().isOk());
+        mvc.perform(get("/register")).andExpect(status().isOk());
+        mvc.perform(get("/assets/css/main.css")).andExpect(status().isOk());
     }
     @Test @WithMockUser(username="student@n11.local",roles="STUDENT")
     void studentCannotManageContentAndPostsNeedCsrf() throws Exception {

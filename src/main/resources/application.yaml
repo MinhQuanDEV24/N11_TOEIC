@@ -8,7 +8,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:n11_toeic}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC}
     username: ${DB_USERNAME:${DB_USER:root}}
-    password: ${DB_PASSWORD:}
+    password: ${DB_PASSWORD:12345678@}
   sql:
     init:
       mode: never
