@@ -26,7 +26,9 @@ public class SecurityConfig {
             .requestMatchers("/", "/login", "/register", "/assets/**", "/css/**", "/js/**",
                 "/images/**", "/webjars/**", "/favicon.ico").permitAll()
             .requestMatchers("/admin/**").hasRole("ADMIN")
-            .requestMatchers("/vocabulary/**", "/listening/**", "/reading/**", "/exams/**",
+            .requestMatchers("/vocabulary/flashcard/*/bookmark").authenticated()
+            .requestMatchers("/vocabulary", "/vocabulary/*", "/vocabulary/flashcard/next").permitAll()
+            .requestMatchers("/listening/**", "/reading/**", "/exams/**",
                 "/roadmap/**", "/progress/**", "/profile", "/grammar/*/submit",
                 "/grammar/attempts/**", "/grammar/history").authenticated()
             .anyRequest().permitAll())
