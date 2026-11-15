@@ -24,6 +24,7 @@ public class SecurityConfig {
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
             .requestMatchers("/admin/**").hasRole("ADMIN")
+            .requestMatchers("/reading/part7/*/start", "/reading/part7/*/ready", "/reading/part7/attempts/**", "/reading/part6/*/start", "/reading/part6/*/ready", "/reading/part6/attempts/**", "/reading/part5/*/start", "/reading/part5/*/ready", "/reading/attempts/**", "/reading/api/**").authenticated()
             .requestMatchers("/grammar/*/submit", "/grammar/*/practice/check", "/grammar/attempts/**", "/grammar/history", "/profile").authenticated()
             .anyRequest().permitAll())
             .formLogin(login -> login.loginPage("/login").usernameParameter("email")
