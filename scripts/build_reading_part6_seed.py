@@ -83,6 +83,8 @@ def main():
  combined=ROOT/'database/n11_toeic.sql';marker='-- BEGIN N11 READING PART 6 STARTER PACK'
  part7=ROOT/'database/updates/005_reading_part7.sql'
  suffix='\n-- BEGIN N11 READING PART 7 STARTER PACK\n'+part7.read_text(encoding='utf-8') if part7.exists() else ''
+ expansion=ROOT/'database/updates/006_reading_expansion.sql'
+ if expansion.exists(): suffix += '\n-- BEGIN N11 READING EXPANSION\n'+expansion.read_text(encoding='utf-8')
  combined.write_text(combined.read_text(encoding='utf-8').split(marker)[0].rstrip()+'\n\n'+marker+'\n'+output+suffix,encoding='utf-8')
  print('Generated 5 passages and 20 Part 6 questions.')
 if __name__=='__main__': main()

@@ -49,5 +49,7 @@ def main():
  output='\n'.join(sql+['COMMIT;','SET AUTOCOMMIT=1;',''])
  (ROOT/'database/updates/005_reading_part7.sql').write_text(output,encoding='utf-8')
  combined=ROOT/'database/n11_toeic.sql';marker='-- BEGIN N11 READING PART 7 STARTER PACK'
- combined.write_text(combined.read_text(encoding='utf-8').split(marker)[0].rstrip()+'\n\n'+marker+'\n'+output,encoding='utf-8')
+ expansion=ROOT/'database/updates/006_reading_expansion.sql'
+ suffix='\n-- BEGIN N11 READING EXPANSION\n'+expansion.read_text(encoding='utf-8') if expansion.exists() else ''
+ combined.write_text(combined.read_text(encoding='utf-8').split(marker)[0].rstrip()+'\n\n'+marker+'\n'+output+suffix,encoding='utf-8')
 if __name__=='__main__':main()

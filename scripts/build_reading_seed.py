@@ -219,6 +219,8 @@ def main():
     suffix = '\n-- BEGIN N11 READING PART 6 STARTER PACK\n'+part6.read_text(encoding='utf-8') if part6.exists() else ''
     part7 = ROOT/'database/updates/005_reading_part7.sql'
     if part7.exists(): suffix += '\n-- BEGIN N11 READING PART 7 STARTER PACK\n'+part7.read_text(encoding='utf-8')
+    expansion = ROOT/'database/updates/006_reading_expansion.sql'
+    if expansion.exists(): suffix += '\n-- BEGIN N11 READING EXPANSION\n'+expansion.read_text(encoding='utf-8')
     combined.write_text(original+'\n\n'+marker+'\n'+output+suffix, encoding='utf-8')
     print(f'Generated {len(QUESTIONS)} questions and {len(VOCABULARY)} vocabulary terms.')
 

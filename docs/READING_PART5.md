@@ -4,7 +4,7 @@ Chức năng nằm tại `/reading`, sử dụng Spring Boot/JSP/JDBC và đúng
 
 ## Học liệu và cài đặt
 
-- 30 câu biên soạn cho dự án, chia 5 cấp độ, mỗi cấp 6 câu; 37 từ vựng kèm IPA, nghĩa và ví dụ song ngữ. Ảnh người dùng cung cấp là tham chiếu bố cục và thao tác. Không tuyên bố câu hỏi lấy từ ETS hoặc độ khó được thống kê từ học viên.
+- 40 câu biên soạn cho dự án, chia 5 cấp độ, mỗi cấp 8 câu; 37 từ vựng kèm IPA, nghĩa và ví dụ song ngữ. Ảnh người dùng cung cấp là tham chiếu bố cục và thao tác. Không tuyên bố câu hỏi lấy từ ETS hoặc độ khó được thống kê từ học viên.
 - Database mới: import `database/n11_toeic.sql` như README.
 - Database đã có schema nhóm: chọn đúng database, chạy `database/updates/003_reading_part5.sql`. Script thêm nội dung còn thiếu, không ghi đè dữ liệu và có thể chạy lại tuần tự. Không chạy đồng thời từ hai kết nối.
 - Máy phát triển hiện tại đã nhập script vào `n11_toeic_team`.
@@ -63,3 +63,7 @@ Chạy `python scripts/build_reading_seed.py` để sinh lại `003_reading_part
 Trong môi trường Windows hạn chế quyền attach, Mockito mặc định có thể treo khi tự gắn Java agent. Phiên kiểm chứng này truyền agent có sẵn qua `-DargLine=-javaagent:<đường-dẫn-mockito-core-5.23.0.jar>`; không cần thay cấu hình ứng dụng. Chạy `mvn -DskipTests package` để đóng gói WAR sau khi kiểm thử thành công.
 
 Kiểm tra trực tiếp: mở `/reading` → cấp 1 → chọn sai câu 1, đúng câu 2 → thêm từ vào giỏ → ghi chú → tải lại → kết thúc khi còn câu trống → xác nhận điểm 1/6 = 16,67% → quay lại xem tiến độ 2/6 và lịch sử. Kiểm tra responsive ở desktop và điện thoại, dùng Tab/Enter để thao tác các nút, Escape để đóng dialog.
+
+## Học liệu bổ sung ngày 16/11/2026
+
+Sau các bản 003–005, nhập `database/updates/006_reading_expansion.sql`. Bộ bổ sung thêm 10 câu Part 5, 5 bài / 20 câu Part 6, và 5 nhóm / 17 câu Part 7. Script không ghi đè câu cũ và có thể nhập lại tuần tự. Lượt đang làm giữ nguyên số câu lúc bắt đầu; kết thúc lượt cũ rồi bắt đầu lượt mới để nhận toàn bộ học liệu bổ sung. Nguồn nội dung: `scripts/build_reading_expansion.py`.

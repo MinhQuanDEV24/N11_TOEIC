@@ -15,7 +15,7 @@ Mở `/reading/part6` hoặc chọn Part 6 trong thanh bên trang Reading. Giao 
 
 ## Dữ liệu
 
-Học liệu khởi đầu tự biên soạn: **5 bài đọc / 20 câu**, mỗi cấp một bài, bao gồm email, thông báo, bản ghi nhớ và hợp đồng. Mỗi bài có câu chọn từ/ngữ pháp và câu điền cả câu theo ngữ cảnh. Số lượng trên giao diện lấy từ database, không dùng số liệu của website tham khảo.
+Học liệu khởi đầu tự biên soạn: **10 bài đọc / 40 câu**, mỗi cấp hai bài, bao gồm email, thông báo, bản ghi nhớ và hợp đồng. Mỗi bài có câu chọn từ/ngữ pháp và câu điền cả câu theo ngữ cảnh. Số lượng trên giao diện lấy từ database, không dùng số liệu của website tham khảo.
 
 - Database mới: `database/n11_toeic.sql` đã gồm Parts 5–7.
 - Database hiện có: chạy `database/updates/004_reading_part6.sql` sau schema nhóm. Script thêm nếu thiếu, không ghi đè nội dung hay kết quả. Chạy tuần tự, không chạy đồng thời hai bản import.
@@ -35,4 +35,8 @@ Học liệu khởi đầu tự biên soạn: **5 bài đọc / 20 câu**, mỗi
 
 `Part6IntegrationTests` gồm 8 ca: đủ 5 cấp; không lộ đáp án/điểm trước câu cuối; sửa trước khi chấm và khóa sau đó; không thể dùng Kết thúc để lộ lời giải sớm; chấm độc lập khi có nhiều bài đọc; chặn truy cập chéo tài khoản/Part 5/ID giả; MVC/CSRF và yêu cầu đăng nhập.
 
-Bộ kiểm thử toàn dự án hiện gồm 64 ca. Trên môi trường Windows hạn chế attach, dùng Java agent Mockito như hướng dẫn trong `READING_PART5.md`. Không cần thay cấu hình MySQL để chạy test H2.
+Bộ kiểm thử học liệu mở rộng nằm trong `ReadingExpansionTests`. Trên môi trường Windows hạn chế attach, dùng Java agent Mockito như hướng dẫn trong `READING_PART5.md`. Không cần thay cấu hình MySQL để chạy test H2.
+
+## Học liệu bổ sung ngày 16/11/2026
+
+Sau các bản 003–005, nhập `database/updates/006_reading_expansion.sql`. Bộ bổ sung thêm 10 câu Part 5, 5 bài / 20 câu Part 6, và 5 nhóm / 17 câu Part 7. Script không ghi đè câu cũ và có thể nhập lại tuần tự. Lượt đang làm giữ nguyên số câu lúc bắt đầu; kết thúc lượt cũ rồi bắt đầu lượt mới để nhận toàn bộ học liệu bổ sung. Nguồn nội dung: `scripts/build_reading_expansion.py`.
