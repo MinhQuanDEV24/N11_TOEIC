@@ -5,13 +5,18 @@ Spring Boot 4.1.2, Java 25+, MySQL 8+, JSP/JSTL, Bootstrap 5 và JDBC (`JdbcTemp
 ## Chạy ứng dụng
 
 1. Mở **thư mục chứa `pom.xml` này** trong IntelliJ hoặc terminal.
-2. Với MySQL trống, import `database/n11_toeic.sql` bằng MySQL Workbench/DBeaver hoặc chạy trong MySQL CLI:
+2. Với MySQL trống, chọn **một** trong hai cách nạp:
 
    ```sql
+   -- Cách A: schema và dữ liệu demo gộp
    SOURCE database/n11_toeic.sql;
+
+   -- Hoặc cách B: schema và seed tách riêng
+   SOURCE database/schema.sql;
+   SOURCE database/seed.sql;
    ```
 
-   File gồm đúng 31 bảng của `CSDL.docx` và dữ liệu demo. **Chỉ import seed vào database trống** vì ID mẫu cố định. Nếu nhóm đã có CSDL và tài khoản, dùng schema của nhóm và nhập học liệu qua trang quản trị; không import đè seed. `CREATE TABLE IF NOT EXISTS` không cập nhật cấu trúc bảng cũ.
+   `n11_toeic.sql` đã gồm dữ liệu demo. Với cách B, `seed.sql` dùng ID cố định nên chỉ chạy trên database trống. Không chạy cả hai cách trên cùng database. Nếu nhóm đã có CSDL và tài khoản, không import đè seed. `CREATE TABLE IF NOT EXISTS` không cập nhật cấu trúc bảng cũ.
 3. Sao chép `application-local.properties.example` thành `application-local.properties` và điền thông tin MySQL. File này đã được Git bỏ qua. Hoặc dùng biến môi trường `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`.
 4. Chạy:
 
@@ -21,13 +26,13 @@ Spring Boot 4.1.2, Java 25+, MySQL 8+, JSP/JSTL, Bootstrap 5 và JDBC (`JdbcTemp
 
 5. Mở [Từ vựng](http://localhost:8080/vocabulary), [Ngữ pháp](http://localhost:8080/grammar) hoặc [Quản trị ngữ pháp](http://localhost:8080/admin/grammar).
 
-## Học Từ Vựng cho nhóm
+## Học Từ Vựng
 
 - Pull nhánh nhóm đang làm việc bằng `git pull` sau khi checkout đúng nhánh.
-- Tạo database MySQL rỗng tên `n11_toeic` (hoặc đặt `DB_NAME`), rồi sao chép file mẫu cấu hình cục bộ như bước trên và điền tài khoản MySQL của máy mình.
-- Khi khởi động, `spring.sql.init.mode=always` tạo schema từ `database/schema.sql` và tự nạp `src/main/resources/vocab_data.sql`. File seed dùng kiểm tra tồn tại trước khi thêm dữ liệu, nên khởi động lại không tạo bản ghi trùng; **không cần chạy script Python hay import riêng dữ liệu từ vựng**.
-- Chạy `mvn spring-boot:run`, sau đó mở [http://localhost:8080/vocabulary](http://localhost:8080/vocabulary). Có 10 chủ đề, mỗi chủ đề 30 từ mẫu.
-- Tài khoản demo `student@n11.local` / `admin@n11.local`, mật khẩu `N11@Demo2026`, chỉ có sau khi nạp seed demo (`database/seed.sql` hoặc `database/n11_toeic.sql`) trên database trống. Trang danh sách từ vựng vẫn xem được khi chưa đăng nhập.
+- Với database trống, chạy `database/schema.sql` rồi chạy một lần `database/seed.sql`. `spring.sql.init.mode=always` chỉ tạo schema; ứng dụng không tự nạp seed khi khởi động.
+- Với database đã có dữ liệu từ schema cũ, chạy lần lượt các script trong `database/updates/` theo thứ tự trước khi chạy phiên bản mới. Không chạy migration trên database vừa tạo bằng `database/schema.sql`.
+- Bộ seed hiện có 25 chủ đề và ba bài học cho mỗi chủ đề. Chủ đề Travel and Transport có 20 từ ở cả ba cấp độ; các chủ đề còn lại vẫn đang chờ nhập bộ từ đầy đủ.
+- Tài khoản demo `student@n11.local` / `admin@n11.local`, mật khẩu `N11@Demo2026`, chỉ có sau khi nạp seed trên database trống. Danh sách chủ đề có thể xem khi chưa đăng nhập; làm bài kiểm tra và đồng bộ tiến độ yêu cầu đăng nhập.
 
 Trên máy đang triển khai, `application-local.yaml` trỏ đến **`n11_toeic_team`**, bản thử riêng theo đúng CSDL mới. Database `n11_toeic` tạo ở lần thử trước được giữ nguyên và không còn được ứng dụng sử dụng. Khi tích hợp, cấu hình kết nối tới database chung đã có schema của nhóm.
 
@@ -49,14 +54,15 @@ Mật khẩu tài khoản trong SQL đã băm BCrypt. Đây là hai tài khoản
 - Lưu bản nháp rồi thêm ví dụ/câu hỏi trước khi công bố. Bài đã có lượt làm được khóa tên và bộ câu hỏi; có thể bỏ công bố.
 - Chấm điểm trên server, transaction cho lưu lượt làm + đáp án, truy vấn có tham số, CSRF, phân quyền và lọc HTML.
 
-Module Từ Vựng (`/vocabulary`) đã dùng dữ liệu SQL tự nạp, hỗ trợ tìm chủ đề/từ và xem chi tiết từ. Các trang nghe, đọc, thi thử, lộ trình, quản lý tài khoản vẫn thuộc phần khung giao diện ban đầu của nhóm. Phần đăng nhập tối thiểu hiện dùng `users` để demo ngữ pháp; đã tích hợp đăng ký từ main (dd43351); chưa triển khai quên mật khẩu hay quản lý tài khoản thay cho thành viên khác.
+Module Từ Vựng (`/vocabulary`) hỗ trợ lộ trình theo chủ đề, trạng thái mở/khóa, bài kiểm tra đầu vào, luyện tập theo bài, tiến độ/sao và tùy chọn giao diện lưu theo tài khoản. Chế độ phát âm dùng Web Speech API của trình duyệt; khả năng sử dụng phụ thuộc trình duyệt và quyền micro. Phần đăng nhập dùng `users`; luồng quên mật khẩu gửi email khi cấu hình SMTP. Để gửi email đặt lại mật khẩu, cấu hình `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_AUTH`, `SMTP_STARTTLS`, `MAIL_FROM` và `APP_PUBLIC_BASE_URL` trong môi trường triển khai; đặt `APP_PUBLIC_BASE_URL` thành URL HTTPS công khai của ứng dụng.
 
 ## Đồng bộ CSDL nhóm
 
 - `database/team-schema.sql`: nội dung SQL trích từ `CSDL.docx` mới, giữ nguyên 31 bảng/53 FK.
 - `database/schema.sql`: cùng các định nghĩa bảng, không gắn tên database.
-- `database/seed.sql`: học liệu và hai tài khoản demo, chỉ dùng bảng/cột đã có.
-- `database/n11_toeic.sql`: schema nhóm + seed để cài từ đầu.
+- `database/seed.sql`: học liệu mẫu và hai tài khoản demo, chỉ dùng bảng/cột đã có.
+- `database/n11_toeic.sql`: bản schema MySQL đầy đủ kèm dữ liệu demo.
+- `database/updates/003_vocabulary_learning_path.sql` đến `005_travel_topic_twenty_words.sql`: migration tuần tự cho database cũ; chỉ chạy mỗi migration một lần.
 - Không thêm `grammar_examples`, `summary`, `lesson_title` hay cột lưu bản sao câu trả lời.
 - Ví dụ và mô tả ngắn nằm trong `grammar_lessons.content_html`; xem [quy ước lưu nội dung](docs/CSDL_INTEGRATION.md).
 

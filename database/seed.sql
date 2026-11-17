@@ -214,3 +214,89 @@ INSERT INTO grammar_options(id,question_id,option_label,option_text,is_correct) 
 INSERT INTO grammar_options(id,question_id,option_label,option_text,is_correct) VALUES(158,40,'B','where',0);
 INSERT INTO grammar_options(id,question_id,option_label,option_text,is_correct) VALUES(159,40,'C','that',1);
 INSERT INTO grammar_options(id,question_id,option_label,option_text,is_correct) VALUES(160,40,'D','whose',0);
+
+-- Vocabulary topics and sample data for testing
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(1,'Work and Careers','Từ vựng IELTS về công việc, nghề nghiệp và môi trường văn phòng.','BASIC',1,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(2,'Travel and Transport','Từ vựng IELTS về du lịch, phương tiện và giao thông.','BASIC',2,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(3,'Shopping and Consumerism','Từ vựng IELTS về mua sắm, tiêu dùng và dịch vụ.','BASIC',3,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(4,'Education','Từ vựng về trường học, học tập và giáo dục suốt đời.','BASIC',4,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(5,'Environment','Từ vựng về môi trường, bảo tồn và biến đổi khí hậu.','BASIC',5,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(6,'Health and Well-being','Từ vựng về sức khỏe, lối sống và chăm sóc y tế.','BASIC',6,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(7,'Technology','Từ vựng về công nghệ, internet và đổi mới.','BASIC',7,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(8,'Society','Từ vựng về cộng đồng, dân số và các vấn đề xã hội.','INTERMEDIATE',8,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(9,'Culture and Traditions','Từ vựng về văn hóa, bản sắc và truyền thống.','INTERMEDIATE',9,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(10,'Media and Communication','Từ vựng về truyền thông, báo chí và giao tiếp.','INTERMEDIATE',10,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(11,'Food and Agriculture','Từ vựng về thực phẩm, dinh dưỡng và nông nghiệp.','BASIC',11,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(12,'Government and Public Services','Từ vựng về chính phủ, chính sách và dịch vụ công.','ADVANCED',12,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(13,'Economy and Finance','Từ vựng về kinh tế, tài chính và thương mại.','INTERMEDIATE',13,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(14,'Science and Research','Từ vựng về khoa học, nghiên cứu và phát minh.','ADVANCED',14,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(15,'Crime and Law','Từ vựng về luật pháp, an ninh và hệ thống tư pháp.','ADVANCED',15,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(16,'Globalization','Từ vựng về hội nhập, thương mại và hợp tác quốc tế.','ADVANCED',16,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(17,'Urbanization and Housing','Từ vựng về đô thị hóa, nhà ở và quy hoạch thành phố.','INTERMEDIATE',17,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(18,'Family and Relationships','Từ vựng về gia đình, các thế hệ và quan hệ xã hội.','BASIC',18,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(19,'Sports and Recreation','Từ vựng về thể thao, giải trí và hoạt động ngoài trời.','BASIC',19,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(20,'Tourism','Từ vựng về du lịch, di sản và dịch vụ lưu trú.','INTERMEDIATE',20,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(21,'Energy and Natural Resources','Từ vựng về năng lượng, tài nguyên và phát triển bền vững.','ADVANCED',21,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(22,'Animals and Wildlife','Từ vựng về động vật, đa dạng sinh học và bảo tồn.','INTERMEDIATE',22,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(23,'Art and Architecture','Từ vựng về nghệ thuật, thiết kế và kiến trúc.','INTERMEDIATE',23,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(24,'Language and Linguistics','Từ vựng về ngôn ngữ, giao tiếp và học ngoại ngữ.','ADVANCED',24,1,1);
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES(25,'Climate Change','Từ vựng về khí hậu, phát thải và giải pháp ứng phó.','ADVANCED',25,1,1);
+
+-- Sample vocabulary terms for Business & Office topic
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(1,1,'appointment','/əˈpɔɪntmənt/','cuộc hẹn','an arrangement to meet someone at a particular time','I have an appointment with the regional manager at ten.','Tôi có cuộc hẹn với quản lý khu vực lúc mười giờ.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(2,1,'agenda','/əˈdʒendə/','chương trình nghị sự','a list of items to be discussed at a meeting','The agenda was sent to all participants yesterday.','Chương trình nghị sự đã được gửi cho tất cả người tham dự hôm qua.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(3,1,'deadline','/ˈdedlaɪn/','hạn chót','the latest time by which something must be completed','Please submit the expense report before the deadline.','Vui lòng nộp báo cáo chi phí trước hạn chót.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(4,1,'department','/dɪˈpɑːrtmənt/','phòng ban','a section of an organization responsible for a particular activity','The accounting department moved to the third floor.','Phòng kế toán đã chuyển lên tầng ba.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(5,1,'colleague','/ˈkɑːliːɡ/','đồng nghiệp','a person with whom one works','A colleague will cover the reception desk this afternoon.','Một đồng nghiệp sẽ trực quầy lễ tân chiều nay.',NULL);
+
+-- Sample vocabulary terms for Travel & Transport topic
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(6,2,'airline','/ˈerlaɪn/','hãng hàng không','a company that provides air transport for passengers or cargo','The airline added a direct flight to Osaka.','Hãng hàng không đã bổ sung chuyến bay thẳng đến Osaka.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(7,2,'flight','/flaɪt/','chuyến bay','a journey made by aircraft','Our flight departs from Gate 12 at 8:30.','Chuyến bay của chúng tôi khởi hành từ Cổng 12 lúc 8 giờ 30.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(8,2,'airport','/ˈerpɔːrt/','sân bay','a place where aircraft take off and land','Please arrive at the airport two hours before departure.','Vui lòng đến sân bay hai giờ trước giờ khởi hành.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(9,2,'passport','/ˈpæspɔːrt/','hộ chiếu','an official document used to identify a traveler internationally','Keep your passport in a secure place during the trip.','Hãy cất hộ chiếu ở nơi an toàn trong suốt chuyến đi.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(10,2,'ticket','/ˈtɪkɪt/','vé','a document that gives the holder permission to travel or enter an event','You can collect your train ticket at the station kiosk.','Bạn có thể nhận vé tàu tại quầy tự động trong nhà ga.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(16,2,'departure','/dɪˈpɑːrtʃər/','sự khởi hành','the act of leaving a place','Passengers should arrive at the terminal before departure.','Hành khách nên đến nhà ga trước giờ khởi hành.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(17,2,'arrival','/əˈraɪvəl/','sự đến nơi','the act of reaching a destination','The arrival of the train was delayed by fifteen minutes.','Chuyến tàu đến nơi muộn mười lăm phút.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(18,2,'destination','/ˌdestɪˈneɪʃən/','điểm đến','the place to which someone or something is going','Our final destination is a small town near the coast.','Điểm đến cuối cùng của chúng tôi là một thị trấn nhỏ gần bờ biển.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(19,2,'itinerary','/aɪˈtɪnəreri/','lịch trình chuyến đi','a plan of a journey, including the route and places visited','The travel agent emailed us a detailed itinerary.','Đại lý du lịch đã gửi cho chúng tôi lịch trình chi tiết.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(20,2,'accommodation','/əˌkɑːməˈdeɪʃən/','chỗ ở','a place where travelers can stay','We booked affordable accommodation close to the station.','Chúng tôi đã đặt chỗ ở giá hợp lý gần nhà ga.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(21,2,'reservation','/ˌrezərˈveɪʃən/','sự đặt chỗ','an arrangement to have a seat, room, or service kept for someone','Please confirm your hotel reservation before you travel.','Vui lòng xác nhận đặt phòng khách sạn trước khi đi.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(22,2,'boarding pass','/ˈbɔːrdɪŋ pæs/','thẻ lên máy bay','a document that allows a passenger to board an aircraft','Keep your boarding pass ready at the departure gate.','Hãy chuẩn bị sẵn thẻ lên máy bay tại cửa khởi hành.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(23,2,'luggage','/ˈlʌɡɪdʒ/','hành lý','bags and cases carried by a traveler','Her luggage was placed in the overhead compartment.','Hành lý của cô ấy được đặt vào ngăn chứa phía trên.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(24,2,'baggage allowance','/ˈbæɡɪdʒ əˌlaʊəns/','lượng hành lý được phép mang','the amount of luggage a passenger may carry without an extra charge','Check the baggage allowance before packing your suitcase.','Hãy kiểm tra lượng hành lý được phép mang trước khi đóng vali.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(25,2,'layover','/ˈleɪˌoʊvər/','thời gian quá cảnh','a period of waiting between connecting parts of a journey','We have a two-hour layover in Singapore.','Chúng tôi quá cảnh hai giờ ở Singapore.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(26,2,'transfer','/ˈtrænsfər/','sự chuyển tuyến','a change from one vehicle or route to another','The ticket includes a transfer to the airport bus.','Vé bao gồm một lượt chuyển sang xe buýt sân bay.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(27,2,'commute','/kəˈmjuːt/','đi lại thường xuyên','to travel regularly between home and work or school','She commutes to work by train every weekday.','Cô ấy đi tàu đến nơi làm việc mỗi ngày trong tuần.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(28,2,'subway','/ˈsʌbweɪ/','tàu điện ngầm','an underground urban railway system','The subway is the fastest way to cross the city center.','Tàu điện ngầm là cách nhanh nhất để đi qua trung tâm thành phố.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(29,2,'platform','/ˈplætfɔːrm/','sân ga','the raised area beside a railway track where passengers wait','The express train will depart from platform four.','Tàu tốc hành sẽ khởi hành từ sân ga số bốn.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(30,2,'fare','/fer/','giá vé','the money paid for a journey on public transport','You can pay the bus fare with a contactless card.','Bạn có thể trả tiền vé xe buýt bằng thẻ không tiếp xúc.',NULL);
+
+-- Sample vocabulary terms for Shopping & Sales topic
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(11,3,'price','/praɪs/','giá','the amount of money required to buy something','The store reduced the price of selected appliances.','Cửa hàng đã giảm giá một số thiết bị gia dụng.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(12,3,'cashier','/kæˈʃɪr/','thu ngân','a person who receives payments in a store','The cashier issued a receipt for the purchase.','Thu ngân đã xuất biên lai cho giao dịch mua hàng.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(13,3,'delivery','/dɪˈlɪvəri/','việc giao hàng','the act of bringing goods to a customer','Free delivery is available for orders over fifty dollars.','Miễn phí giao hàng cho đơn đặt hàng trên năm mươi đô la.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(14,3,'sale','/seɪl/','đợt giảm giá','an occasion when goods are sold at reduced prices','The store will hold a clearance sale this weekend.','Cửa hàng sẽ tổ chức đợt giảm giá thanh lý vào cuối tuần này.',NULL);
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES(15,3,'vendor','/ˈvendər/','nhà cung cấp','a person or company that sells goods or services','The vendor delivered the supplies to the warehouse.','Nhà cung cấp đã giao vật tư đến kho.',NULL);
+
+INSERT INTO vocabulary_lessons(topic_id,title,description,sort_order,target_word_count,is_published,created_by)
+SELECT t.id, CONCAT(t.title, ' — Nền tảng'), 'Học nhóm từ vựng cốt lõi và ví dụ theo chủ đề.', 1, 10, 1, 1
+FROM vocabulary_topics t WHERE t.is_published=1
+AND NOT EXISTS (SELECT 1 FROM vocabulary_lessons l WHERE l.topic_id=t.id AND l.sort_order=1);
+INSERT INTO vocabulary_lessons(topic_id,title,description,sort_order,target_word_count,is_published,created_by)
+SELECT t.id, CONCAT(t.title, ' — Mở rộng'), 'Mở rộng vốn từ và luyện tập theo ngữ cảnh.', 2, 20, 1, 1
+FROM vocabulary_topics t WHERE t.is_published=1
+AND NOT EXISTS (SELECT 1 FROM vocabulary_lessons l WHERE l.topic_id=t.id AND l.sort_order=2);
+INSERT INTO vocabulary_lessons(topic_id,title,description,sort_order,target_word_count,is_published,created_by)
+SELECT t.id, CONCAT(t.title, ' — Nâng cao'), 'Ôn tập chuyên sâu với bộ từ vựng nâng cao.', 3, 36, 1, 1
+FROM vocabulary_topics t WHERE t.is_published=1
+AND NOT EXISTS (SELECT 1 FROM vocabulary_lessons l WHERE l.topic_id=t.id AND l.sort_order=3);
+UPDATE vocabulary_lessons
+SET target_word_count=20
+WHERE topic_id=(SELECT id FROM vocabulary_topics WHERE title='Travel and Transport');
+
+INSERT INTO vocabulary_lesson_terms(lesson_id,term_id,sort_order)
+SELECT l.id, t.id, ROW_NUMBER() OVER (PARTITION BY l.id ORDER BY t.id)
+FROM vocabulary_lessons l
+JOIN vocabulary_terms t ON t.topic_id=l.topic_id
+WHERE NOT EXISTS (SELECT 1 FROM vocabulary_lesson_terms lt
+                  WHERE lt.lesson_id=l.id AND lt.term_id=t.id);

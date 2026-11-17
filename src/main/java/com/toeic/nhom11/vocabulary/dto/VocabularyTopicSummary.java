@@ -15,6 +15,10 @@ public class VocabularyTopicSummary {
     private long learningWords;
     private long bookmarkedWords;
     private double progressPercent;
+    private int totalLessons;
+    private int completedLessons;
+    private int totalStars;
+    private boolean placementPassed;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -40,4 +44,12 @@ public class VocabularyTopicSummary {
     public void setBookmarkedWords(long bookmarkedWords) { this.bookmarkedWords = bookmarkedWords; }
     public double getProgressPercent() { return progressPercent; }
     public void setProgressPercent(double progressPercent) { this.progressPercent = progressPercent; }
+    public int getTotalLessons() { return totalLessons; }
+    public void setTotalLessons(int totalLessons) { this.totalLessons = totalLessons; }
+    public int getCompletedLessons() { return completedLessons; }
+    public void setCompletedLessons(int completedLessons) { this.completedLessons = completedLessons; }
+    public int getTotalStars() { return totalStars; }
+    public void setTotalStars(int totalStars) { this.totalStars = totalStars; }
+    public boolean isPlacementPassed() { return placementPassed; }
+    public void setPlacementPassed(boolean placementPassed) { this.placementPassed = placementPassed; }
 }

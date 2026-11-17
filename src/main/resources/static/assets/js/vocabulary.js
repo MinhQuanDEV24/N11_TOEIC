@@ -4,12 +4,16 @@
   function speak(word, audioUrl) {
     if (audioUrl) {
       const audio = new Audio(audioUrl);
-      audio.play().catch(function () {
-        speakWithSpeechSynthesis(word);
+      return audio.play().catch(function () {
+        if (word) {
+          speakWithSpeechSynthesis(word);
+          return;
+        }
+        throw new Error(translate('audioPlaybackFailed'));
       });
-      return;
     }
     speakWithSpeechSynthesis(word);
+    return Promise.resolve();
   }
 
   function speakWithSpeechSynthesis(word) {
@@ -22,6 +26,372 @@
     });
     if (voice) utterance.voice = voice;
     window.speechSynthesis.speak(utterance);
+  }
+
+  const translations = {
+    VI: {
+      heroEyebrow: '✧ LỘ TRÌNH TỪ VỰNG IELTS',
+      heroTitleFirst: 'Xây dựng vốn từ vựng,',
+      heroTitleSecond: 'từng chủ đề một.',
+      heroDescription: 'Khám phá 25 chủ đề IELTS, học qua các bài ngắn và theo dõi tiến độ từ từ đầu tiên đến khi thành thạo.',
+      heroNote: 'Tiến bộ từng bước. Vốn từ vững chắc. Tự tin trả lời.',
+      topicStat: 'Chủ đề học',
+      levelStat: 'Chủ đề từ cơ bản đến nâng cao',
+      stepsStat: 'Học · luyện tập · thành thạo',
+      progressEyebrow: 'TIẾN ĐỘ HỌC TẬP',
+      progressHeading: 'Tiếp tục chinh phục lộ trình',
+      progressSummary: 'bài học hoàn thành ·',
+      viewHistory: 'Xem lịch sử →',
+      guestEyebrow: 'HỌC THỬ',
+      guestHeading: 'Khám phá các chủ đề trước khi bắt đầu',
+      guestDescription: 'Xem bài học và thẻ từ vựng với tư cách khách. Đăng nhập để làm bài kiểm tra và đồng bộ tiến độ học tập.',
+      signIn: 'Đăng nhập để đồng bộ tiến độ →',
+      curriculumEyebrow: 'CHƯƠNG TRÌNH IELTS CỦA BẠN',
+      topicHeading: 'Chọn chủ đề để bắt đầu',
+      topicDescription: 'Mỗi chủ đề có ba bài học, bài kiểm tra đầu vào và các chế độ luyện tập tập trung.',
+      topics: 'chủ đề',
+      levelBasic: 'Cơ bản',
+      levelIntermediate: 'Trung cấp',
+      levelAdvanced: 'Nâng cao',
+      lessons: 'bài học',
+      complete: 'hoàn thành',
+      placementPassedShort: 'Đã vượt qua bài kiểm tra',
+      placementAvailable: 'Có bài kiểm tra đầu vào',
+      openRoadmap: 'Mở lộ trình →',
+      emptyTopics: 'Chưa có chủ đề từ vựng',
+      emptyTopicsText: 'Các chặng học sẽ xuất hiện tại đây khi nội dung được cập nhật.',
+      wordEyebrow: 'MỖI NGÀY MỘT TỪ',
+      wordHeading: 'Từ vựng hôm nay',
+      wordDescription: 'Ôn nhanh một từ trong kho từ vựng.',
+      randomWord: 'TỪ NGẪU NHIÊN',
+      exploreTopic: 'Khám phá chủ đề này →',
+      wordEmpty: 'Từ vựng sẽ xuất hiện khi có chủ đề được đăng.',
+      topicIncludes: 'Mỗi chủ đề bao gồm',
+      stepFlashcards: 'Thẻ từ vựng có ví dụ',
+      stepPractice: 'Bài tập và nghe viết',
+      stepPlacement: 'Bài kiểm tra đầu vào và tiến độ',
+      settings: '⚙ Cài đặt hiển thị',
+      theme: 'Giao diện',
+      fontSize: 'Cỡ chữ',
+      language: 'Ngôn ngữ',
+      saveSettings: 'Lưu cài đặt',
+      settingsSaved: 'Đã lưu cài đặt.',
+      settingsSaveFailed: 'Không thể lưu cài đặt. Vui lòng thử lại.',
+      signInPrompt: 'Đăng nhập để lưu tiến độ học tập.',
+      wordMastered: 'Đã lưu từ này là đã thuộc.',
+      saveWord: 'Lưu từ này',
+      savedWord: 'Đã lưu',
+      wordSavedNotice: 'Từ vựng đã được lưu vào sổ tay của bạn.',
+      flashcardLoadFailed: 'Không tải được thẻ từ tiếp theo.',
+      saveWordFailed: 'Không thể lưu từ vựng. Vui lòng thử lại.',
+      pronunciationUnavailable: 'Trình duyệt này không hỗ trợ nhận diện giọng nói.',
+      noWordAvailable: 'Không có từ vựng để luyện tập.',
+      pronunciationGood: 'Phát âm tốt!',
+      pronunciationRetry: 'Hãy nghe lại mẫu và thử lần nữa.',
+      microphoneUnavailable: 'Không thể truy cập micro. Hãy kiểm tra quyền của trình duyệt.',
+      listening: 'Đang nghe…',
+      quizScore: 'Bạn trả lời đúng',
+      quizQuestions: 'câu.',
+      backAllTopics: '← Tất cả chủ đề',
+      resultPlacementTitle: 'Kết quả bài kiểm tra đầu vào',
+      resultPracticeTitle: 'Kết quả luyện tập',
+      answeredCorrectly: 'Trả lời đúng',
+      questions: 'câu',
+      placementPassedResult: 'Đạt yêu cầu — toàn bộ bài học đã được mở khóa.',
+      placementFailedResult: 'Chưa đạt 25 câu đúng. Bạn có thể ôn tập và làm lại.',
+      lessonCompletedResult: 'Bài học đã hoàn thành ·',
+      lessonPassHint: 'Đạt 70% để hoàn thành bài và mở khóa bài tiếp theo.',
+      returnToTopics: 'Quay về',
+      viewHistoryLabel: 'Xem lịch sử',
+      answerDetails: 'Chi tiết câu trả lời',
+      question: 'Câu',
+      correct: '✓ Đúng',
+      incorrect: '✗ Sai',
+      yourAnswer: 'Câu trả lời của bạn:',
+      historyHeading: 'Lịch sử luyện tập',
+      historyDescription: 'Xem lại các bài kiểm tra từ vựng đã làm',
+      viewDetails: 'Xem chi tiết',
+      noAttempts: 'Chưa có bài kiểm tra',
+      startTopicHint: 'Hãy bắt đầu với một chủ đề từ vựng để luyện tập.',
+      chooseTopic: 'Chọn chủ đề',
+      adminRole: 'Quản trị viên',
+      learnerRole: 'Học viên',
+      signInSync: 'Đăng nhập để đồng bộ tiến độ',
+      placementTestTitle: 'BÀI KIỂM TRA ĐẦU VÀO',
+      lessonQuizTitle: 'BÀI KIỂM TRA BÀI HỌC',
+      multipleChoice: 'trắc nghiệm',
+      dictationLabel: 'nghe viết',
+      passAt: 'đạt từ',
+      audioUnavailable: 'Chưa có âm thanh cho câu này',
+      audioPlaybackFailed: 'Không thể phát âm thanh. Vui lòng thử lại.',
+      backRoadmap: '← Quay lại lộ trình',
+      backTopic: '← Quay lại chủ đề',
+      lessonsCompleted: 'bài học hoàn thành',
+      starsEarned: 'số sao đạt được',
+      wordsAvailable: 'từ hiện có',
+      placementPassed: '✓ Đã vượt qua bài kiểm tra đầu vào',
+      takePlacement: 'Làm bài kiểm tra vượt cấp (30 câu)',
+      signInPlacement: 'Đăng nhập để làm bài kiểm tra vượt cấp',
+      placementHint: 'Đạt từ 25/30 câu sẽ mở khóa toàn bộ bài học.',
+      learningPath: 'LỘ TRÌNH HỌC',
+      lessonsInTopic: 'Bài học trong chủ đề',
+      locked: 'Khóa',
+      inProgress: 'Đang học',
+      completed: 'Hoàn thành',
+      open: 'Mở',
+      words: 'từ',
+      target: 'Mục tiêu',
+      openLesson: 'Vào học →',
+      lessonsPreparing: 'Bài học đang được chuẩn bị',
+      lessonsPreparingText: 'Các bài học của chủ đề này sẽ xuất hiện khi nội dung được xuất bản.',
+      learnAtYourPace: 'Học thẻ, làm bài tập và luyện nghe viết.',
+      flashcards: 'Học thẻ',
+      exercises: 'Bài tập',
+      dictation: 'Nghe viết',
+      pronunciation: 'Luyện phát âm',
+      flashcardPractice: 'LUYỆN TẬP BẰNG THẺ',
+      reviewWords: 'Ôn tập từ vựng',
+      flipCardHint: 'Nhấn để lật thẻ',
+      previous: '← Trước',
+      listen: '🔊 Nghe',
+      markMastered: 'Đã thuộc',
+      next: 'Tiếp →',
+      wordsPreparing: 'Từ vựng đang được bổ sung',
+      wordsPreparingText: 'Bài học này chưa có từ để luyện tập.',
+      speakPractice: 'LUYỆN NÓI',
+      pronunciationTitle: 'Luyện phát âm bằng giọng nói',
+      pronunciationDescription: 'Nghe từ mẫu, nhấn nút micro và đọc lại. Trình duyệt sẽ so sánh câu nhận diện được.',
+      startSpeaking: '🎙 Luyện từ hiện tại',
+      placementInstructions: 'Bài kiểm tra gồm 25 câu trắc nghiệm và 5 câu nghe viết. Đạt ít nhất 25/30 để mở khóa toàn bộ bài học.',
+      lessonQuizInstructions: 'Hoàn thành bài tập để lưu điểm, nhận sao và mở khóa bài học tiếp theo.',
+      dictationQuestion: 'Nghe và viết từ bạn nghe được',
+      meaningPrompt: 'Chọn từ tiếng Anh tương ứng với nghĩa:',
+      playAudio: '🔊 Phát âm thanh',
+      submitQuiz: 'Nộp bài và xem kết quả',
+      quizAnswerNotice: 'Kết quả được chấm và lưu trên máy chủ.'
+    },
+    EN: {
+      heroEyebrow: '✧ IELTS VOCABULARY ROADMAP',
+      heroTitleFirst: 'Build your vocabulary,',
+      heroTitleSecond: 'one topic at a time.',
+      heroDescription: 'Explore 25 IELTS topics, learn in short lessons, and track your progress from the first word to mastery.',
+      heroNote: 'Small steps. Strong vocabulary. Confident answers.',
+      topicStat: 'Topics',
+      levelStat: 'Topics from foundation to advanced',
+      stepsStat: 'Learn · practise · master',
+      progressEyebrow: 'YOUR LEARNING PROGRESS',
+      progressHeading: 'Keep moving through your roadmap',
+      progressSummary: 'lessons completed ·',
+      viewHistory: 'View history →',
+      viewHistoryLabel: 'View history',
+      guestEyebrow: 'GUEST PREVIEW',
+      guestHeading: 'Explore the topics before you begin',
+      guestDescription: 'Browse lessons and flashcards as a guest. Sign in to take tests and sync your learning progress.',
+      signIn: 'Sign in to sync progress →',
+      curriculumEyebrow: 'YOUR IELTS CURRICULUM',
+      topicHeading: 'Choose a topic to start',
+      topicDescription: 'Each topic includes three lessons, a placement test, and focused practice modes.',
+      topics: 'topics',
+      levelBasic: 'Foundation',
+      levelIntermediate: 'Intermediate',
+      levelAdvanced: 'Advanced',
+      lessons: 'lessons',
+      complete: 'complete',
+      placementPassedShort: 'Placement test passed',
+      placementAvailable: 'Placement test available',
+      openRoadmap: 'Open roadmap →',
+      emptyTopics: 'No vocabulary topics yet',
+      emptyTopicsText: 'Learning paths will appear here when the content is published.',
+      wordEyebrow: 'WORD OF THE DAY',
+      wordHeading: 'Word of the day',
+      wordDescription: 'A quick review from the vocabulary bank.',
+      randomWord: 'RANDOM WORD',
+      exploreTopic: 'Explore this topic →',
+      wordEmpty: 'A word will appear when topics are published.',
+      topicIncludes: 'Every topic includes',
+      stepFlashcards: 'Flashcards with examples',
+      stepPractice: 'Exercises and dictation',
+      stepPlacement: 'Placement test and progress',
+      settingsSaved: 'Settings saved.',
+      settingsSaveFailed: 'Could not save settings. Please try again.',
+      signInPrompt: 'Sign in to save your learning progress.',
+      wordMastered: 'Word saved as mastered.',
+      saveWord: 'Save this word',
+      savedWord: 'Saved',
+      wordSavedNotice: 'Word saved to your notebook.',
+      flashcardLoadFailed: 'Could not load the next flashcard.',
+      saveWordFailed: 'Could not save this word. Please try again.',
+      pronunciationUnavailable: 'Speech recognition is not available in this browser.',
+      noWordAvailable: 'No vocabulary word is available.',
+      pronunciationGood: 'Good pronunciation!',
+      pronunciationRetry: 'Try again and listen to the sample.',
+      microphoneUnavailable: 'Microphone access was not available. Check your browser permissions.',
+      listening: 'Listening…',
+      quizScore: 'You got',
+      quizQuestions: 'questions correct.',
+      backAllTopics: '← All topics',
+      resultPlacementTitle: 'Placement test results',
+      resultPracticeTitle: 'Practice results',
+      answeredCorrectly: 'Correct answers:',
+      questions: 'questions',
+      placementPassedResult: 'Passed — every lesson is now unlocked.',
+      placementFailedResult: 'You need 25 correct answers. Review and try again.',
+      lessonCompletedResult: 'Lesson completed ·',
+      lessonPassHint: 'Score 70% to complete this lesson and unlock the next one.',
+      returnToTopics: 'Back to topics',
+      answerDetails: 'Answer details',
+      question: 'Question',
+      correct: '✓ Correct',
+      incorrect: '✗ Incorrect',
+      yourAnswer: 'Your answer:',
+      historyHeading: 'Practice history',
+      historyDescription: 'Review your completed vocabulary quizzes',
+      viewDetails: 'View details',
+      noAttempts: 'No quizzes yet',
+      startTopicHint: 'Choose a vocabulary topic to start practising.',
+      chooseTopic: 'Choose a topic',
+      adminRole: 'Administrator',
+      learnerRole: 'Learner',
+      signInSync: 'Sign in to sync your progress',
+      placementTestTitle: 'PLACEMENT TEST',
+      lessonQuizTitle: 'LESSON QUIZ',
+      multipleChoice: 'multiple choice',
+      dictationLabel: 'dictation',
+      passAt: 'pass at',
+      audioUnavailable: 'Audio is not available for this question',
+      audioPlaybackFailed: 'Could not play the audio. Please try again.',
+      settings: '⚙ Display settings',
+      theme: 'Theme',
+      fontSize: 'Text size',
+      language: 'Language',
+      saveSettings: 'Save settings',
+      backRoadmap: '← Back to roadmap',
+      backTopic: '← Back to topic',
+      lessonsCompleted: 'lessons completed',
+      starsEarned: 'stars earned',
+      wordsAvailable: 'available words',
+      placementPassed: '✓ Placement test passed',
+      takePlacement: 'Take placement test (30 questions)',
+      signInPlacement: 'Sign in to take the placement test',
+      placementHint: 'Score at least 25/30 to unlock every lesson.',
+      learningPath: 'YOUR LEARNING PATH',
+      lessonsInTopic: 'Lessons in this topic',
+      locked: 'Locked',
+      inProgress: 'In progress',
+      completed: 'Completed',
+      open: 'Open',
+      words: 'words',
+      target: 'Target',
+      openLesson: 'Start lesson →',
+      lessonsPreparing: 'Lessons are being prepared',
+      lessonsPreparingText: 'Lessons will appear here when the topic content is published.',
+      learnAtYourPace: 'Study flashcards, take exercises, and practise dictation.',
+      flashcards: 'Flashcards',
+      exercises: 'Exercises',
+      dictation: 'Dictation',
+      pronunciation: 'Pronunciation',
+      flashcardPractice: 'FLASHCARD PRACTICE',
+      reviewWords: 'Review vocabulary',
+      flipCardHint: 'Tap to flip the card',
+      previous: '← Previous',
+      listen: '🔊 Listen',
+      markMastered: 'I know this',
+      next: 'Next →',
+      wordsPreparing: 'Vocabulary is being added',
+      wordsPreparingText: 'This lesson does not have words to practise yet.',
+      speakPractice: 'SPEAKING PRACTICE',
+      pronunciationTitle: 'Practise pronunciation with your voice',
+      pronunciationDescription: 'Listen to the sample, tap the microphone, and repeat. Your browser will compare the recognized speech.',
+      startSpeaking: '🎙 Practise current word',
+      placementInstructions: 'The test has 25 multiple-choice questions and 5 dictation questions. Score at least 25/30 to unlock every lesson.',
+      lessonQuizInstructions: 'Complete the exercise to save your score, earn stars, and unlock the next lesson.',
+      dictationQuestion: 'Listen and write the word you hear',
+      meaningPrompt: 'Choose the English word matching this meaning:',
+      playAudio: '🔊 Play audio',
+      submitQuiz: 'Submit and see results',
+      quizAnswerNotice: 'Answers are graded and saved on the server.'
+    }
+  };
+
+  const settings = document.querySelector('[data-vocab-settings]');
+  let currentLanguage = settings && settings.querySelector('[data-setting="language"]')
+    ? settings.querySelector('[data-setting="language"]').value
+    : 'EN';
+  function translate(key) {
+    return translations[currentLanguage] && translations[currentLanguage][key]
+      ? translations[currentLanguage][key]
+      : key;
+  }
+
+  function applyPreferences(theme, fontSize, language) {
+    currentLanguage = language;
+    document.documentElement.dataset.vocabTheme = theme.toLowerCase();
+    document.documentElement.dataset.vocabFontSize = fontSize.toLowerCase();
+    document.documentElement.lang = language.toLowerCase();
+    document.querySelectorAll('[data-i18n]').forEach(function (element) {
+      const translated = translations[language] && translations[language][element.dataset.i18n];
+      if (translated) element.textContent = translated;
+    });
+  }
+
+  if (settings) {
+    const controls = {
+      theme: settings.querySelector('[data-setting="theme"]'),
+      fontSize: settings.querySelector('[data-setting="fontSize"]'),
+      language: settings.querySelector('[data-setting="language"]')
+    };
+    const status = settings.querySelector('[data-settings-status]');
+    const saved = localStorage.getItem('n11-vocabulary-preferences');
+    if (saved && settings.dataset.signedIn !== 'true') {
+      try {
+        const localPreferences = JSON.parse(saved);
+        Object.keys(controls).forEach(function (key) {
+          if (localPreferences[key]) controls[key].value = localPreferences[key];
+        });
+      } catch (error) {
+        localStorage.removeItem('n11-vocabulary-preferences');
+      }
+    }
+    const currentPreferences = function () {
+      return {
+        theme: controls.theme.value,
+        fontSize: controls.fontSize.value,
+        language: controls.language.value
+      };
+    };
+    applyPreferences(controls.theme.value, controls.fontSize.value, controls.language.value);
+    Object.keys(controls).forEach(function (key) {
+      controls[key].addEventListener('change', function () {
+        const values = currentPreferences();
+        applyPreferences(values.theme, values.fontSize, values.language);
+      });
+    });
+    settings.querySelector('[data-save-settings]').addEventListener('click', function () {
+      const values = currentPreferences();
+      localStorage.setItem('n11-vocabulary-preferences', JSON.stringify(values));
+      if (settings.dataset.signedIn !== 'true') {
+        status.textContent = translations[values.language].settingsSaved;
+        return;
+      }
+      const body = new URLSearchParams(values);
+      const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+      if (settings.dataset.csrfHeader && settings.dataset.csrfToken) {
+        headers[settings.dataset.csrfHeader] = settings.dataset.csrfToken;
+      }
+      fetch(settings.dataset.settingsUrl, {
+        method: 'POST',
+        headers: headers,
+        body: body.toString(),
+        credentials: 'same-origin'
+      }).then(function (response) {
+        if (!response.ok) throw new Error('Unable to save display settings.');
+        return response.json();
+      }).then(function () {
+        status.textContent = translations[values.language].settingsSaved;
+      }).catch(function () {
+        status.textContent = translations[values.language].settingsSaveFailed;
+      });
+    });
   }
 
   function shuffle(items) {
@@ -58,7 +428,7 @@
       if (bookmark) {
         bookmark.dataset.url = bookmark.dataset.url.replace(/\/flashcard\/\d+\/bookmark$/, '/flashcard/' + data.id + '/bookmark');
         bookmark.disabled = false;
-        bookmark.textContent = 'Lưu từ này';
+        bookmark.textContent = translate('saveWord');
       }
     }
 
@@ -83,7 +453,7 @@
       status.textContent = '';
       fetch(button.dataset.url, { headers: { Accept: 'application/json' }, credentials: 'same-origin' })
         .then(function (response) {
-          if (!response.ok) throw new Error('Không tải được flashcard tiếp theo.');
+          if (!response.ok) throw new Error(translate('flashcardLoadFailed'));
           return response.json();
         })
         .then(function (data) {
@@ -117,13 +487,13 @@
               window.location.assign(response.url);
               return null;
             }
-            if (!response.ok) throw new Error('Không thể lưu từ vựng. Vui lòng thử lại.');
+            if (!response.ok) throw new Error(translate('saveWordFailed'));
             return response.json();
           })
           .then(function (data) {
             if (!data) return;
-            button.textContent = 'Đã lưu';
-            status.textContent = 'Từ vựng đã được lưu vào sổ tay của bạn.';
+            button.textContent = translate('savedWord');
+            status.textContent = translate('wordSavedNotice');
           })
           .catch(function (error) {
             status.textContent = error.message;
@@ -135,6 +505,7 @@
 
   const wordCards = Array.from(document.querySelectorAll('.vocab-word-card')).map(function (card) {
     return {
+      id: card.dataset.id || '',
       word: card.dataset.word || '',
       phonetic: card.dataset.phonetic || '',
       partOfSpeech: card.dataset.partOfSpeech || '',
@@ -147,8 +518,9 @@
 
   document.querySelectorAll('.vocab-pronounce').forEach(function (button) {
     button.addEventListener('click', function () {
-      const card = button.closest('.vocab-word-card');
-      speak(card.dataset.word, card.dataset.audioUrl);
+      const card = button.closest('.vocab-word-card, .vocab-random-word');
+      const word = card ? card.dataset.word : button.dataset.word;
+      speak(word, card ? card.dataset.audioUrl : '');
     });
   });
 
@@ -170,11 +542,14 @@
     let currentIndex = 0;
     let studyFlipped = false;
     const studyCard = document.getElementById('vocab-study-card');
+    if (!studyCard) return;
 
     function renderStudyCard() {
       if (!studyCard || !wordCards.length) return;
       const item = wordCards[currentIndex];
       studyCard.classList.toggle('is-flipped', studyFlipped);
+      studyCard.dataset.id = item.id;
+      studyCard.dataset.word = item.word;
       studyCard.querySelector('.vocab-study-counter').textContent = (currentIndex + 1) + ' / ' + wordCards.length;
       studyCard.querySelector('.vocab-study-word').textContent = item.word;
       studyCard.querySelector('.vocab-study-phonetic').textContent = item.phonetic;
@@ -207,6 +582,32 @@
     document.getElementById('vocab-study-speak').addEventListener('click', function () {
       speak(wordCards[currentIndex].word, wordCards[currentIndex].audioUrl);
     });
+    const masteredButton = document.getElementById('vocab-mark-mastered');
+    if (masteredButton) {
+      masteredButton.addEventListener('click', function () {
+        const status = document.getElementById('vocab-flashcard-status');
+        if (masteredButton.dataset.signedIn !== 'true') {
+          status.textContent = translate('signInPrompt');
+          return;
+        }
+        const url = masteredButton.dataset.progressUrl.replace('__TERM_ID__', studyCard.dataset.id);
+        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+        if (masteredButton.dataset.csrfHeader && masteredButton.dataset.csrfToken) {
+          headers[masteredButton.dataset.csrfHeader] = masteredButton.dataset.csrfToken;
+        }
+        fetch(url, {
+          method: 'POST',
+          headers: headers,
+          body: 'status=MASTERED',
+          credentials: 'same-origin'
+        }).then(function (response) {
+          if (!response.ok) throw new Error(translate('saveWordFailed'));
+          status.textContent = translate('wordMastered');
+        }).catch(function (error) {
+          status.textContent = error.message;
+        });
+      });
+    }
     document.getElementById('vocab-close-study').addEventListener('click', function () {
       flashcardPanel.hidden = true;
     });
@@ -256,11 +657,53 @@
         if (selected && selected.value === question.item.word) correct++;
       });
       document.getElementById('vocab-quiz-result').textContent =
-        'Bạn trả lời đúng ' + correct + ' / ' + quizQuestions.length + ' câu.';
+        translate('quizScore') + ' ' + correct + ' / ' + quizQuestions.length + ' ' + translate('quizQuestions');
     });
     document.getElementById('vocab-close-quiz').addEventListener('click', function () {
       quizPanel.hidden = true;
     });
     renderStudyCard();
+  }
+
+  document.querySelectorAll('.vocab-speak-prompt').forEach(function (button) {
+    button.addEventListener('click', function () {
+      speak('', button.dataset.audioUrl).catch(function (error) {
+        document.getElementById('vocab-dictation-status').textContent = error.message;
+      });
+    });
+  });
+
+  const pronunciationButton = document.getElementById('vocab-pronunciation-check');
+  if (pronunciationButton) {
+    pronunciationButton.addEventListener('click', function () {
+      const status = document.getElementById('vocab-pronunciation-status');
+      const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!Recognition) {
+        status.textContent = translate('pronunciationUnavailable');
+        return;
+      }
+      const current = document.getElementById('vocab-study-card');
+      const target = current ? current.dataset.word : '';
+      if (!target) {
+        status.textContent = translate('noWordAvailable');
+        return;
+      }
+      const recognition = new Recognition();
+      recognition.lang = 'en-US';
+      recognition.maxAlternatives = 3;
+      recognition.onresult = function (event) {
+        const targetWord = target.toLowerCase().trim();
+        const heard = Array.from(event.results[0]).map(function (result) {
+          return result.transcript.toLowerCase().trim();
+        });
+        const matched = heard.some(function (value) { return value === targetWord; });
+        status.textContent = matched ? translate('pronunciationGood') : translate('pronunciationRetry');
+      };
+      recognition.onerror = function () {
+        status.textContent = translate('microphoneUnavailable');
+      };
+      status.textContent = translate('listening');
+      recognition.start();
+    });
   }
 })();

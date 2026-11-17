@@ -23,11 +23,16 @@ public class SecurityConfig {
 
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
-            .requestMatchers("/", "/login", "/register", "/assets/**", "/css/**", "/js/**",
+            .requestMatchers("/", "/login", "/register", "/forgot-password", "/reset-password",
+                "/assets/**", "/css/**", "/js/**",
                 "/images/**", "/webjars/**", "/favicon.ico").permitAll()
             .requestMatchers("/admin/**").hasRole("ADMIN")
+            .requestMatchers("/vocabulary/preferences", "/vocabulary/*/placement/**",
+                "/vocabulary/*/lessons/*/quiz/**").authenticated()
             .requestMatchers("/vocabulary/flashcard/*/bookmark").authenticated()
             .requestMatchers("/vocabulary", "/vocabulary/*", "/vocabulary/flashcard/next").permitAll()
+            .requestMatchers("/vocabulary/*/submit", "/vocabulary/*/progress", "/vocabulary/*/favorite",
+                "/vocabulary/attempts/**", "/vocabulary/history").authenticated()
             .requestMatchers("/listening/**", "/reading/**", "/exams/**",
                 "/roadmap/**", "/progress/**", "/profile", "/grammar/*/submit",
                 "/grammar/attempts/**", "/grammar/history").authenticated()
