@@ -26,7 +26,7 @@ public class SecurityConfig {
             .requestMatchers("/", "/login", "/register", "/forgot-password", "/reset-password",
                 "/assets/**", "/css/**", "/js/**",
                 "/images/**", "/webjars/**", "/favicon.ico").permitAll()
-            .requestMatchers("/admin/**").hasRole("ADMIN")
+            .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
             .requestMatchers("/vocabulary/preferences", "/vocabulary/*/placement/**",
                 "/vocabulary/*/lessons/*/quiz/**").authenticated()
             .requestMatchers("/vocabulary/flashcard/*/bookmark").authenticated()
@@ -35,10 +35,15 @@ public class SecurityConfig {
                 "/vocabulary/attempts/**", "/vocabulary/history").authenticated()
             .requestMatchers("/listening/**", "/reading/**", "/exams/**",
                 "/roadmap/**", "/progress/**", "/profile", "/grammar/*/submit",
-                "/grammar/attempts/**", "/grammar/history").authenticated()
+                "/grammar/*/practice/check", "/grammar/attempts/**", "/grammar/history").authenticated()
             .anyRequest().permitAll())
             .formLogin(login -> login.loginPage("/login").usernameParameter("email")
-                .defaultSuccessUrl("/grammar", false).failureUrl("/login?error").permitAll())
+                .successHandler((request, response, authentication) -> {
+                    boolean admin = authentication.getAuthorities().stream()
+                            .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
+                    response.sendRedirect(request.getContextPath() +
+                            (admin ? "/admin/accounts" : "/grammar"));
+                }).failureUrl("/login?error").permitAll())
             .logout(logout -> logout.logoutSuccessUrl("/grammar"))
             .build();
     }
