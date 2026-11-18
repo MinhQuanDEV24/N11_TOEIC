@@ -21,5 +21,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-shell.css?v=pr6-merge" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-accounts.css?v=pr6-merge" />
   </c:if>
+  <%-- V15: helper mo code cua Admin; chi nap o localhost. --%>
+  <c:if test="${pageContext.request.serverName eq 'localhost' or pageContext.request.serverName eq '127.0.0.1'}">
+    <script defer src="${pageContext.request.contextPath}/assets/js/admin-dev-source-v14.js?v=15.0"></script>
+  </c:if>
 </head>
 <body>
