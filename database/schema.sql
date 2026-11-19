@@ -66,6 +66,22 @@ CREATE TABLE IF NOT EXISTS `vocabulary_topics` (
   CONSTRAINT `fk_vocabulary_topics_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `vocabulary_lessons` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `topic_id` BIGINT UNSIGNED NOT NULL,
+  `title` VARCHAR(200) NOT NULL,
+  `description` TEXT NULL DEFAULT NULL,
+  `sort_order` INT UNSIGNED NOT NULL DEFAULT 0,
+  `target_word_count` SMALLINT UNSIGNED NOT NULL DEFAULT 10,
+  `is_published` BOOLEAN NOT NULL DEFAULT 0,
+  `created_by` BIGINT UNSIGNED NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_vocabulary_lessons_topic_order` (`topic_id`, `sort_order`),
+  CONSTRAINT `chk_vocabulary_lessons_word_count` CHECK (`target_word_count` BETWEEN 10 AND 36),
+  CONSTRAINT `fk_vocabulary_lessons_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `vocabulary_topics` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vocabulary_lessons_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `vocabulary_terms` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `topic_id` BIGINT UNSIGNED NOT NULL,
@@ -81,6 +97,16 @@ CREATE TABLE IF NOT EXISTS `vocabulary_terms` (
   KEY `idx_vocabulary_terms_word` (`word`),
   CONSTRAINT `fk_vocabulary_terms_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `vocabulary_topics` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_vocabulary_terms_audio_media_id` FOREIGN KEY (`audio_media_id`) REFERENCES `media_assets` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `vocabulary_lesson_terms` (
+  `lesson_id` BIGINT UNSIGNED NOT NULL,
+  `term_id` BIGINT UNSIGNED NOT NULL,
+  `sort_order` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`lesson_id`, `term_id`),
+  UNIQUE KEY `uq_vocabulary_lesson_terms_order` (`lesson_id`, `sort_order`),
+  CONSTRAINT `fk_vocabulary_lesson_terms_lesson_id` FOREIGN KEY (`lesson_id`) REFERENCES `vocabulary_lessons` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vocabulary_lesson_terms_term_id` FOREIGN KEY (`term_id`) REFERENCES `vocabulary_terms` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `user_vocabulary_progress` (
@@ -99,29 +125,60 @@ CREATE TABLE IF NOT EXISTS `user_vocabulary_progress` (
   CONSTRAINT `fk_user_vocabulary_progress_term_id` FOREIGN KEY (`term_id`) REFERENCES `vocabulary_terms` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `user_vocabulary_lesson_progress` (
+  `user_id` BIGINT UNSIGNED NOT NULL,
+  `lesson_id` BIGINT UNSIGNED NOT NULL,
+  `status` ENUM('IN_PROGRESS','COMPLETED') NOT NULL DEFAULT 'IN_PROGRESS',
+  `best_score` DECIMAL(5,2) NOT NULL DEFAULT 0.00,
+  `stars` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`, `lesson_id`),
+  CONSTRAINT `chk_user_vocabulary_lesson_stars` CHECK (`stars` BETWEEN 0 AND 3),
+  CONSTRAINT `fk_user_vocabulary_lesson_progress_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_vocabulary_lesson_progress_lesson_id` FOREIGN KEY (`lesson_id`) REFERENCES `vocabulary_lessons` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `user_vocabulary_preferences` (
+  `user_id` BIGINT UNSIGNED NOT NULL,
+  `theme` ENUM('LIGHT','DARK') NOT NULL DEFAULT 'LIGHT',
+  `font_size` ENUM('SMALL','MEDIUM','LARGE') NOT NULL DEFAULT 'MEDIUM',
+  `language` ENUM('VI','EN') NOT NULL DEFAULT 'VI',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `fk_user_vocabulary_preferences_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `vocabulary_quiz_attempts` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT UNSIGNED NOT NULL,
   `topic_id` BIGINT UNSIGNED NOT NULL,
+  `lesson_id` BIGINT UNSIGNED NULL DEFAULT NULL,
+  `quiz_type` ENUM('TOPIC','LESSON','PLACEMENT') NOT NULL DEFAULT 'TOPIC',
   `question_count` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   `correct_count` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  `passed` BOOLEAN NOT NULL DEFAULT 0,
   `submitted_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_vocabulary_quiz_attempts_user_id` (`user_id`),
   KEY `idx_vocabulary_quiz_attempts_topic_id` (`topic_id`),
+  KEY `idx_vocabulary_quiz_attempts_lesson_id` (`lesson_id`),
+  KEY `idx_vocabulary_quiz_attempts_type` (`quiz_type`),
   KEY `idx_vocabulary_quiz_attempts_submitted_at` (`submitted_at`),
   CONSTRAINT `fk_vocabulary_quiz_attempts_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_vocabulary_quiz_attempts_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `vocabulary_topics` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT `fk_vocabulary_quiz_attempts_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `vocabulary_topics` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vocabulary_quiz_attempts_lesson_id` FOREIGN KEY (`lesson_id`) REFERENCES `vocabulary_lessons` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `vocabulary_quiz_answers` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `attempt_id` BIGINT UNSIGNED NOT NULL,
+  `question_number` SMALLINT UNSIGNED NOT NULL,
   `term_id` BIGINT UNSIGNED NOT NULL,
   `selected_term_id` BIGINT UNSIGNED NULL DEFAULT NULL,
+  `typed_answer` VARCHAR(500) NULL DEFAULT NULL,
   `is_correct` BOOLEAN NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_vocabulary_quiz_answers_attempt_id_term_id` (`attempt_id`, `term_id`),
+  UNIQUE KEY `uq_vocabulary_quiz_answers_attempt_id_question_number` (`attempt_id`, `question_number`),
   CONSTRAINT `fk_vocabulary_quiz_answers_attempt_id` FOREIGN KEY (`attempt_id`) REFERENCES `vocabulary_quiz_attempts` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_vocabulary_quiz_answers_term_id` FOREIGN KEY (`term_id`) REFERENCES `vocabulary_terms` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_vocabulary_quiz_answers_selected_term_id` FOREIGN KEY (`selected_term_id`) REFERENCES `vocabulary_terms` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
