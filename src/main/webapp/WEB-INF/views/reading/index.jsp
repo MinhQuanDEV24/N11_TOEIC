@@ -1,12 +1,36 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ include file="../fragments/head.jspf" %>
 <%@ include file="../fragments/header.jspf" %>
-<section class="page-hero"><div class="container container-n11"><div class="section-caption">READING · PART 5–7</div><h1>Luyện đọc hiểu TOEIC có chiến lược</h1><p>Chọn từng phần thi để luyện kỹ năng từ hoàn thành câu đến đọc hiểu đoạn văn, thư điện tử và thông báo.</p></div></section>
-<section class="page-section"><div class="container container-n11"><div class="row g-3 mb-5">
-<div class="col-md-6 col-lg-4"><div class="mini-card"><div class="d-flex justify-content-between align-items-center"><span class="feature-icon blue mb-0"><svg class="icon icon-lg"><use href="${pageContext.request.contextPath}/assets/img/icons.svg#book-open"></use></svg></span><span class="part-tag">30 câu / test</span></div><h3>Part 5 · Incomplete Sentences</h3><p>Chọn từ hoặc cấu trúc ngữ pháp đúng để hoàn thành câu.</p><a href="#" class="feature-link" data-demo-action="Bài học sẽ kết nối MySQL trong giai đoạn lập trình nghiệp vụ.">Xem nội dung →</a></div></div>
-<div class="col-md-6 col-lg-4"><div class="mini-card"><div class="d-flex justify-content-between align-items-center"><span class="feature-icon blue mb-0"><svg class="icon icon-lg"><use href="${pageContext.request.contextPath}/assets/img/icons.svg#book-open"></use></svg></span><span class="part-tag">16 câu / test</span></div><h3>Part 6 · Text Completion</h3><p>Điền từ, cụm từ hoặc câu thích hợp vào đoạn văn.</p><a href="#" class="feature-link" data-demo-action="Bài học sẽ kết nối MySQL trong giai đoạn lập trình nghiệp vụ.">Xem nội dung →</a></div></div>
-<div class="col-md-6 col-lg-4"><div class="mini-card"><div class="d-flex justify-content-between align-items-center"><span class="feature-icon blue mb-0"><svg class="icon icon-lg"><use href="${pageContext.request.contextPath}/assets/img/icons.svg#book-open"></use></svg></span><span class="part-tag">54 câu / test</span></div><h3>Part 7 · Reading Comprehension</h3><p>Đọc một hoặc nhiều đoạn văn và trả lời câu hỏi.</p><a href="#" class="feature-link" data-demo-action="Bài học sẽ kết nối MySQL trong giai đoạn lập trình nghiệp vụ.">Xem nội dung →</a></div></div>
-</div><div class="panel-card"><div class="d-flex justify-content-between mb-3"><h3 class="mb-0" style="font-size:20px">Làm thử Reading Part 5</h3><span class="pill pill-primary">Câu mẫu</span></div><div data-quiz data-answer="D" data-explanation="Sau 'very' và trước danh từ 'employee' cần tính từ. 'Reliable' có nghĩa là đáng tin cậy."><p class="fw-bold" style="font-size:18px">Ms. Chen is a very _____ employee who always meets deadlines.</p><div class="row g-2 mb-3"><div class="col-md-6"><label class="quiz-option"><input name="readingQuiz" type="radio" value="A"> A. reliability</label></div><div class="col-md-6"><label class="quiz-option"><input name="readingQuiz" type="radio" value="B"> B. rely</label></div><div class="col-md-6"><label class="quiz-option"><input name="readingQuiz" type="radio" value="C"> C. reliably</label></div><div class="col-md-6"><label class="quiz-option"><input name="readingQuiz" type="radio" value="D"> D. reliable</label></div></div><button type="button" data-check-quiz class="btn btn-primary">Xem kết quả</button><div class="answer-result mt-3" role="status"></div></div></div>
-</div></section>
+<main class="reading-home container container-n11">
+  <nav class="reading-breadcrumb" aria-label="Đường dẫn"><a href="${pageContext.request.contextPath}/">Trang chủ</a><span>›</span><a href="${pageContext.request.contextPath}/reading">Luyện đọc TOEIC</a><span>›</span><strong>Part 5: Hoàn thành câu</strong></nav>
+  <div class="reading-layout">
+    <aside class="reading-sidebar">
+      <div class="reading-sidebar-title"><span class="reading-book"><svg class="icon icon-lg"><use href="${pageContext.request.contextPath}/assets/img/icons.svg#book-open"/></svg></span><div><strong>Kỹ năng Đọc</strong><small>Reading · Parts 5 → 7</small></div></div>
+      <a class="reading-part active" aria-current="page" href="${pageContext.request.contextPath}/reading"><span>5</span>Part 5: Hoàn thành câu</a>
+      <a class="reading-part" href="${pageContext.request.contextPath}/reading/part6"><span>6</span>Part 6: Hoàn thành đoạn văn</a>
+      <a class="reading-part" href="${pageContext.request.contextPath}/reading/part7"><span>7</span>Part 7: Đọc hiểu</a>
+      <p class="reading-sidebar-tip">Mỗi câu là một bước tiến.<br>Luyện đều đặn, hiểu thật kỹ.</p>
+    </aside>
+    <div class="reading-content">
+      <section class="reading-hero"><div><span class="reading-eyebrow">LUYỆN TẬP THEO NĂNG LỰC</span><h1>Luyện Part 5 theo 5 cấp độ</h1><p>Hoàn thành câu, củng cố ngữ pháp và mở rộng vốn từ. Xem đáp án, giải thích và bản dịch ngay trong từng câu luyện tập.</p><small>Học liệu N11 biên soạn · Tiến độ được lưu theo tài khoản</small></div><span class="reading-hero-icon" aria-hidden="true"><svg><use href="${pageContext.request.contextPath}/assets/img/icons.svg#book-open"/></svg></span></section>
+      <div class="reading-section-title"><h2>Chọn cấp độ của bạn</h2><span>Học từ dễ đến khó</span></div>
+      <div class="reading-levels">
+        <c:forEach var="item" items="${levels}">
+          <section class="reading-level level-${item.level}">
+            <div class="reading-level-heading"><span class="reading-level-number">${item.level}</span><h3>Cấp ${item.level} — <c:out value="${item.label}"/></h3></div>
+            <span class="reading-difficulty">▥ <c:out value="${item.label}"/></span>
+            <p>Part 5: Hoàn thành câu · luyện theo độ khó ${item.level}/5</p>
+            <div class="reading-question-count">${item.total} câu</div>
+            <div class="reading-progress-label"><span>Đã luyện ${item.practiced}/${item.total} câu</span><strong>${item.percent}%</strong></div>
+            <progress max="100" value="${item.percent}" aria-label="Tiến độ cấp ${item.level}"></progress>
+            <c:choose><c:when test="${item.total gt 0}"><a class="reading-start" href="${pageContext.request.contextPath}/reading/part5/${item.level}">Bắt đầu luyện <span aria-hidden="true">→</span></a></c:when><c:otherwise><button class="reading-start" disabled>Chưa có học liệu</button></c:otherwise></c:choose>
+          </section>
+        </c:forEach>
+      </div>
+      <c:if test="${empty pageContext.request.userPrincipal}"><p class="reading-signin-note"><a href="${pageContext.request.contextPath}/login">Đăng nhập</a> để làm bài, lưu tiến độ và tạo giỏ từ của riêng bạn.</p></c:if>
+      <c:if test="${not empty history}"><section class="reading-history"><h2>Lượt luyện gần đây</h2><div class="table-responsive"><table class="table"><thead><tr><th>Bộ luyện</th><th>Đúng / Tổng</th><th>Kết quả</th><th></th></tr></thead><tbody><c:forEach var="attempt" items="${history}"><tr><td><c:out value="${attempt.title}"/><small><c:out value="${attempt.submitted_at}"/></small></td><td>${attempt.correct_count}/${attempt.total_questions}</td><td>${attempt.score_percent}%</td><td><a href="${pageContext.request.contextPath}/reading/attempts/${attempt.id}">Xem lại →</a></td></tr></c:forEach></tbody></table></div></section></c:if>
+    </div>
+  </div>
+</main>
 <%@ include file="../fragments/footer.jspf" %>
 <%@ include file="../fragments/scripts.jspf" %>

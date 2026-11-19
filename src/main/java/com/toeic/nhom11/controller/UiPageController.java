@@ -28,9 +28,6 @@ public class UiPageController {
     @GetMapping("/listening")
     public String listening(Model model) { return page(model, "listening/index", "listening", "Luyện Listening"); }
 
-    @GetMapping("/reading")
-    public String reading(Model model) { return page(model, "reading/index", "reading", "Luyện Reading"); }
-
     @GetMapping("/exams")
     public String exams(Model model) { return page(model, "exams/index", "exams", "Thi thử TOEIC"); }
 
