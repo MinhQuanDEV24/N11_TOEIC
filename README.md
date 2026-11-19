@@ -127,3 +127,12 @@ Phần lý thuyết được diễn giải bằng tiếng Việt. Ví dụ công
 - Cột `grammar_questions.explanation` giữ nguyên schema, quy ước lời giải mới gồm dòng `[PHÂN TÍCH]` rồi bốn dòng `[A] ...`, `[B] ...`, `[C] ...`, `[D] ...`. Mỗi dòng giải thích tại sao phương án tương ứng phù hợp hoặc không phù hợp. Câu cũ vẫn đọc được lời giải chung. Không có dịch vụ AI.
 
 Nguồn bổ sung là PDF **Ngữ pháp tiếng anh cơ bản toàn tập**, nội dung *English Grammar Review*, HP Group, do người dùng cung cấp. Tham khảo phần thì ở trang PDF 16–24 và các phần từ loại, điều kiện, bị động, mệnh đề quan hệ. Các lưu ý và ví dụ công sở được diễn giải/biên soạn cho dự án, không chép nguyên tài liệu. PDF nằm ngoài repo.
+
+
+## Luyện Reading Parts 5–7
+
+Chọn Đọc trên thanh điều hướng, sau đó chọn Part 5, 6 hoặc 7. Mỗi phần có 5 cấp độ, lưu tiến độ và lịch sử theo tài khoản. Part 6/7 hỗ trợ Song ngữ, Tra từ và chỉ chấm khi hoàn thành nhóm câu hỏi. Part 7 có bài đọc đơn/đôi/ba và lời giải kèm dẫn chứng.
+
+Database hiện có: nhập lần lượt `database/updates/003_reading_part5.sql`, `004_reading_part6.sql`, `005_reading_part7.sql`. Cài mới dùng `database/n11_toeic.sql`. Hướng dẫn và giới hạn học liệu: [Part 5](docs/READING_PART5.md), [Part 6](docs/READING_PART6.md), [Part 7](docs/READING_PART7.md).
+
+Học liệu Reading mở rộng: nhập thêm `database/updates/006_reading_expansion.sql` sau 003–005. Tổng: 40 câu Part 5, 40 câu Part 6 (10 bài), 34 câu Part 7 (10 nhóm / 18 văn bản). Lượt đang làm giữ nguyên danh sách câu; lượt mới dùng học liệu đầy đủ.

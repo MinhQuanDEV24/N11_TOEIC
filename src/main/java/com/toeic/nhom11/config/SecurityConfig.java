@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.DefaultSavedRequest;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @Configuration
 public class SecurityConfig {
@@ -22,6 +24,7 @@ public class SecurityConfig {
     }
 
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        var requestCache = new HttpSessionRequestCache();
         return http.authorizeHttpRequests(auth -> auth
             .requestMatchers("/", "/login", "/register", "/forgot-password", "/reset-password",
                 "/assets/**", "/css/**", "/js/**",
@@ -37,12 +40,25 @@ public class SecurityConfig {
                 "/roadmap/**", "/progress/**", "/profile", "/grammar/*/submit",
                 "/grammar/*/practice/check", "/grammar/attempts/**", "/grammar/history").authenticated()
             .anyRequest().permitAll())
+            .requestCache(cache -> cache.requestCache(requestCache))
             .formLogin(login -> login.loginPage("/login").usernameParameter("email")
                 .successHandler((request, response, authentication) -> {
                     boolean admin = authentication.getAuthorities().stream()
                             .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
-                    response.sendRedirect(request.getContextPath() +
-                            (admin ? "/admin/accounts" : "/grammar"));
+                    String destination = admin ? "/admin/accounts" : "/grammar";
+                    if (!admin && requestCache.getRequest(request, response) instanceof DefaultSavedRequest saved
+                            && "GET".equals(saved.getMethod())) {
+                        String path = saved.getRequestURI();
+                        String context = request.getContextPath();
+                        if (path.startsWith(context)) {
+                            String relative = path.substring(context.length());
+                            if (relative.matches("/reading(?:/part[5-7](?:/[1-5](?:/ready)?)?)?")) {
+                                destination = relative;
+                                requestCache.removeRequest(request, response);
+                            }
+                        }
+                    }
+                    response.sendRedirect(request.getContextPath() + destination);
                 }).failureUrl("/login?error").permitAll())
             .logout(logout -> logout.logoutSuccessUrl("/grammar"))
             .build();
