@@ -98,9 +98,11 @@ class Part7IntegrationTests {
         mvc.perform(get("/reading/api/part7/attempts/"+id)).andExpect(status().isOk()).andExpect(jsonPath("$.questions[0].correct_option").doesNotExist());
         mvc.perform(post("/reading/api/part7/attempts/"+id+"/finish").with(csrf())).andExpect(status().isBadRequest());
     }
-    @Test void guestMustLoginAndInvalidLevelsAreRejected() throws Exception {
+    @Test void guestMustLogin() throws Exception {
         mvc.perform(get("/reading/part7/1/ready")).andExpect(status().is3xxRedirection());
         mvc.perform(get("/reading/part7/attempts/1")).andExpect(status().is3xxRedirection());
+    }
+    @Test @WithMockUser(username=USER,roles="STUDENT") void invalidLevelsAreRejected() throws Exception {
         mvc.perform(get("/reading/part7/9")).andExpect(status().isNotFound());
     }
 }

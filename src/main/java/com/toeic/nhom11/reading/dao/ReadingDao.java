@@ -41,7 +41,7 @@ public class ReadingDao {
     }
     public List<Map<String,Object>> vocabulary(List<String> words) {
         if (words.isEmpty()) return List.of();
-        return rows("SELECT t.id,t.word,t.ipa,t.meaning_vi,t.definition_en,t.example_en,t.example_vi FROM vocabulary_terms t JOIN vocabulary_topics p ON p.id=t.topic_id WHERE p.title='N11 Reading Part 5' AND p.is_published=TRUE AND t.word IN ("
+        return rows("SELECT t.id,t.word,t.ipa,t.meaning_vi,t.definition_en,t.example_en,t.example_vi FROM vocabulary_terms t JOIN vocabulary_topics p ON p.id=t.topic_id WHERE p.title='N11 Reading Part 5' AND t.word IN ("
             + String.join(",", Collections.nCopies(words.size(), "?")) + ") ORDER BY t.id", words.toArray());
     }
 }

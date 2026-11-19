@@ -1,6 +1,6 @@
 # Luyện Reading Part 7
 
-Trang `/reading/part7` có 5 cấp độ, số bài/câu và tiến độ lấy từ dữ liệu thực. Chọn cấp độ → đăng nhập → bắt đầu hoặc tiếp tục lượt đang làm.
+Trang `/reading/part7` có 5 cấp độ, số bài/câu và tiến độ lấy từ dữ liệu thực. Đăng nhập → chọn cấp độ → bắt đầu hoặc tiếp tục lượt đang làm.
 
 - Bài đọc đơn, đôi và ba văn bản hiển thị bên trái, câu hỏi bên phải; màn hình nhỏ xếp thành một cột.
 - Song ngữ và Tra từ bật/tắt độc lập, mặc định tắt. Nháy đúp từ khi bật Tra từ hoặc tìm trong ô tra cứu. Từ điển giới hạn ở học liệu của nhóm bài hiện tại; không gọi dịch vụ dịch bên ngoài.

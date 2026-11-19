@@ -125,10 +125,14 @@ class ReadingIntegrationTests {
         assertThrows(ResponseStatusException.class,()->service.start(1,STUDENT));
         assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM practice_attempts",Integer.class));
     }
-    @Test void publicPagesAndProtectedPractice() throws Exception {
+    @Test @WithMockUser(username=STUDENT,roles="STUDENT") void studentCanBrowseReadingLevels() throws Exception {
         mvc.perform(get("/reading")).andExpect(status().isOk()).andExpect(view().name("reading/index"));
         mvc.perform(get("/reading/part5/2")).andExpect(status().isOk()).andExpect(view().name("reading/intro"));
         mvc.perform(get("/reading/part5/9")).andExpect(status().isNotFound());
+    }
+    @Test void readingPagesAndPracticeRequireLogin() throws Exception {
+        mvc.perform(get("/reading")).andExpect(status().is3xxRedirection());
+        mvc.perform(get("/reading/part5/2")).andExpect(status().is3xxRedirection());
         mvc.perform(get("/reading/api/attempts/1")).andExpect(status().is3xxRedirection());
         mvc.perform(post("/reading/part5/1/start").with(csrf())).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
     }

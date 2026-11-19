@@ -1,5 +1,7 @@
 # Reading Part 5
 
+Nếu cơ sở dữ liệu đã nhập bản Reading cũ, chạy lại `database/updates/003_reading_part5.sql` để ẩn nhóm từ riêng của Part 5 khỏi danh mục Từ vựng. Các từ và tiến độ học đã lưu vẫn dùng được trong Reading.
+
 Chức năng nằm tại `/reading`, sử dụng Spring Boot/JSP/JDBC và đúng các bảng sẵn có của CSDL nhóm. Không đổi schema hoặc thêm bảng. Part 6 và 7 có liên kết luyện tập riêng trong thanh bên.
 
 ## Học liệu và cài đặt
@@ -8,7 +10,7 @@ Chức năng nằm tại `/reading`, sử dụng Spring Boot/JSP/JDBC và đúng
 - Database mới: import `database/n11_toeic.sql` như README.
 - Database đã có schema nhóm: chọn đúng database, chạy `database/updates/003_reading_part5.sql`. Script thêm nội dung còn thiếu, không ghi đè dữ liệu và có thể chạy lại tuần tự. Không chạy đồng thời từ hai kết nối.
 - Máy phát triển hiện tại đã nhập script vào `n11_toeic_team`.
-- Đăng nhập bằng tài khoản hiện có hoặc tài khoản demo trong README để luyện. Khách xem được danh sách cấp độ và màn giới thiệu; đăng nhập từ màn giới thiệu sẽ quay lại đúng cấp độ.
+- Đăng nhập bằng tài khoản hiện có hoặc tài khoản demo trong README để xem các cấp độ và luyện tập. Khi học viên mở liên kết đến một cấp độ, hệ thống đưa học viên về cấp đó sau khi đăng nhập.
 - Số câu và tiến độ trên thẻ được truy vấn thực tế. Nếu chưa nhập học liệu, thẻ hiện 0 câu và nút bị vô hiệu hóa.
 
 ## Luồng học

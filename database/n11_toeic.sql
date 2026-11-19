@@ -84,6 +84,21 @@ CREATE TABLE IF NOT EXISTS `vocabulary_topics` (
   KEY `idx_vocabulary_topics_is_published` (`is_published`),
   CONSTRAINT `fk_vocabulary_topics_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS `vocabulary_lessons` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `topic_id` BIGINT UNSIGNED NOT NULL,
+  `title` VARCHAR(200) NOT NULL,
+  `description` TEXT NULL DEFAULT NULL,
+  `sort_order` INT UNSIGNED NOT NULL DEFAULT 0,
+  `target_word_count` SMALLINT UNSIGNED NOT NULL DEFAULT 10,
+  `is_published` BOOLEAN NOT NULL DEFAULT 0,
+  `created_by` BIGINT UNSIGNED NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_vocabulary_lessons_topic_order` (`topic_id`, `sort_order`),
+  CONSTRAINT `chk_vocabulary_lessons_word_count` CHECK (`target_word_count` BETWEEN 10 AND 36),
+  CONSTRAINT `fk_vocabulary_lessons_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `vocabulary_topics` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vocabulary_lessons_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 -- C. Học từ vựng / Từ vựng
 -- BANG 06: vocabulary_terms (nhom Giai đoạn 2)
 CREATE TABLE IF NOT EXISTS `vocabulary_terms` (
@@ -102,6 +117,15 @@ CREATE TABLE IF NOT EXISTS `vocabulary_terms` (
   CONSTRAINT `fk_vocabulary_terms_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `vocabulary_topics` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_vocabulary_terms_audio_media_id` FOREIGN KEY (`audio_media_id`) REFERENCES `media_assets` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS `vocabulary_lesson_terms` (
+  `lesson_id` BIGINT UNSIGNED NOT NULL,
+  `term_id` BIGINT UNSIGNED NOT NULL,
+  `sort_order` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`lesson_id`, `term_id`),
+  UNIQUE KEY `uq_vocabulary_lesson_terms_order` (`lesson_id`, `sort_order`),
+  CONSTRAINT `fk_vocabulary_lesson_terms_lesson_id` FOREIGN KEY (`lesson_id`) REFERENCES `vocabulary_lessons` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vocabulary_lesson_terms_term_id` FOREIGN KEY (`term_id`) REFERENCES `vocabulary_terms` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 -- C. Học từ vựng / Tiến độ từng từ
 -- BANG 07: user_vocabulary_progress (nhom Giai đoạn 2)
 CREATE TABLE IF NOT EXISTS `user_vocabulary_progress` (
@@ -119,32 +143,61 @@ CREATE TABLE IF NOT EXISTS `user_vocabulary_progress` (
   CONSTRAINT `fk_user_vocabulary_progress_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_user_vocabulary_progress_term_id` FOREIGN KEY (`term_id`) REFERENCES `vocabulary_terms` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS `user_vocabulary_lesson_progress` (
+  `user_id` BIGINT UNSIGNED NOT NULL,
+  `lesson_id` BIGINT UNSIGNED NOT NULL,
+  `status` ENUM('IN_PROGRESS','COMPLETED') NOT NULL DEFAULT 'IN_PROGRESS',
+  `best_score` DECIMAL(5,2) NOT NULL DEFAULT 0.00,
+  `stars` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`, `lesson_id`),
+  CONSTRAINT `chk_user_vocabulary_lesson_stars` CHECK (`stars` BETWEEN 0 AND 3),
+  CONSTRAINT `fk_user_vocabulary_lesson_progress_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_vocabulary_lesson_progress_lesson_id` FOREIGN KEY (`lesson_id`) REFERENCES `vocabulary_lessons` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS `user_vocabulary_preferences` (
+  `user_id` BIGINT UNSIGNED NOT NULL,
+  `theme` ENUM('LIGHT','DARK') NOT NULL DEFAULT 'LIGHT',
+  `font_size` ENUM('SMALL','MEDIUM','LARGE') NOT NULL DEFAULT 'MEDIUM',
+  `language` ENUM('VI','EN') NOT NULL DEFAULT 'VI',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `fk_user_vocabulary_preferences_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 -- C. Học từ vựng / Lượt kiểm tra từ vựng
 -- BANG 08: vocabulary_quiz_attempts (nhom Giai đoạn 2)
 CREATE TABLE IF NOT EXISTS `vocabulary_quiz_attempts` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT UNSIGNED NOT NULL,
   `topic_id` BIGINT UNSIGNED NOT NULL,
+  `lesson_id` BIGINT UNSIGNED NULL DEFAULT NULL,
+  `quiz_type` ENUM('TOPIC','LESSON','PLACEMENT') NOT NULL DEFAULT 'TOPIC',
   `question_count` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   `correct_count` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  `passed` BOOLEAN NOT NULL DEFAULT 0,
   `submitted_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_vocabulary_quiz_attempts_user_id` (`user_id`),
   KEY `idx_vocabulary_quiz_attempts_topic_id` (`topic_id`),
+  KEY `idx_vocabulary_quiz_attempts_lesson_id` (`lesson_id`),
+  KEY `idx_vocabulary_quiz_attempts_type` (`quiz_type`),
   KEY `idx_vocabulary_quiz_attempts_submitted_at` (`submitted_at`),
   CONSTRAINT `fk_vocabulary_quiz_attempts_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_vocabulary_quiz_attempts_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `vocabulary_topics` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT `fk_vocabulary_quiz_attempts_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `vocabulary_topics` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vocabulary_quiz_attempts_lesson_id` FOREIGN KEY (`lesson_id`) REFERENCES `vocabulary_lessons` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 -- C. Học từ vựng / Câu trả lời kiểm tra từ vựng
 -- BANG 09: vocabulary_quiz_answers (nhom Giai đoạn 2)
 CREATE TABLE IF NOT EXISTS `vocabulary_quiz_answers` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `attempt_id` BIGINT UNSIGNED NOT NULL,
+  `question_number` SMALLINT UNSIGNED NOT NULL,
   `term_id` BIGINT UNSIGNED NOT NULL,
   `selected_term_id` BIGINT UNSIGNED NULL DEFAULT NULL,
+  `typed_answer` VARCHAR(500) NULL DEFAULT NULL,
   `is_correct` BOOLEAN NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_vocabulary_quiz_answers_attempt_id_term_id` (`attempt_id`, `term_id`),
+  UNIQUE KEY `uq_vocabulary_quiz_answers_attempt_id_question_number` (`attempt_id`, `question_number`),
   CONSTRAINT `fk_vocabulary_quiz_answers_attempt_id` FOREIGN KEY (`attempt_id`) REFERENCES `vocabulary_quiz_attempts` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_vocabulary_quiz_answers_term_id` FOREIGN KEY (`term_id`) REFERENCES `vocabulary_terms` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_vocabulary_quiz_answers_selected_term_id` FOREIGN KEY (`selected_term_id`) REFERENCES `vocabulary_terms` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
@@ -736,6 +789,82 @@ INSERT INTO grammar_options(id,question_id,option_label,option_text,is_correct) 
 INSERT INTO grammar_options(id,question_id,option_label,option_text,is_correct) VALUES(158,40,'B','where',0);
 INSERT INTO grammar_options(id,question_id,option_label,option_text,is_correct) VALUES(159,40,'C','that',1);
 INSERT INTO grammar_options(id,question_id,option_label,option_text,is_correct) VALUES(160,40,'D','whose',0);
+
+INSERT INTO vocabulary_topics(id,title,description,level,sort_order,is_published,created_by) VALUES
+(1,'Work and Careers','Từ vựng IELTS về công việc, nghề nghiệp và môi trường văn phòng.','BASIC',1,1,1),
+(2,'Travel and Transport','Từ vựng IELTS về du lịch, phương tiện và giao thông.','BASIC',2,1,1),
+(3,'Shopping and Consumerism','Từ vựng IELTS về mua sắm, tiêu dùng và dịch vụ.','BASIC',3,1,1),
+(4,'Education','Từ vựng về trường học, học tập và giáo dục suốt đời.','BASIC',4,1,1),
+(5,'Environment','Từ vựng về môi trường, bảo tồn và biến đổi khí hậu.','BASIC',5,1,1),
+(6,'Health and Well-being','Từ vựng về sức khỏe, lối sống và chăm sóc y tế.','BASIC',6,1,1),
+(7,'Technology','Từ vựng về công nghệ, internet và đổi mới.','BASIC',7,1,1),
+(8,'Society','Từ vựng về cộng đồng, dân số và các vấn đề xã hội.','INTERMEDIATE',8,1,1),
+(9,'Culture and Traditions','Từ vựng về văn hóa, bản sắc và truyền thống.','INTERMEDIATE',9,1,1),
+(10,'Media and Communication','Từ vựng về truyền thông, báo chí và giao tiếp.','INTERMEDIATE',10,1,1),
+(11,'Food and Agriculture','Từ vựng về thực phẩm, dinh dưỡng và nông nghiệp.','BASIC',11,1,1),
+(12,'Government and Public Services','Từ vựng về chính phủ, chính sách và dịch vụ công.','ADVANCED',12,1,1),
+(13,'Economy and Finance','Từ vựng về kinh tế, tài chính và thương mại.','INTERMEDIATE',13,1,1),
+(14,'Science and Research','Từ vựng về khoa học, nghiên cứu và phát minh.','ADVANCED',14,1,1),
+(15,'Crime and Law','Từ vựng về luật pháp, an ninh và hệ thống tư pháp.','ADVANCED',15,1,1),
+(16,'Globalization','Từ vựng về hội nhập, thương mại và hợp tác quốc tế.','ADVANCED',16,1,1),
+(17,'Urbanization and Housing','Từ vựng về đô thị hóa, nhà ở và quy hoạch thành phố.','INTERMEDIATE',17,1,1),
+(18,'Family and Relationships','Từ vựng về gia đình, các thế hệ và quan hệ xã hội.','BASIC',18,1,1),
+(19,'Sports and Recreation','Từ vựng về thể thao, giải trí và hoạt động ngoài trời.','BASIC',19,1,1),
+(20,'Tourism','Từ vựng về du lịch, di sản và dịch vụ lưu trú.','INTERMEDIATE',20,1,1),
+(21,'Energy and Natural Resources','Từ vựng về năng lượng, tài nguyên và phát triển bền vững.','ADVANCED',21,1,1),
+(22,'Animals and Wildlife','Từ vựng về động vật, đa dạng sinh học và bảo tồn.','INTERMEDIATE',22,1,1),
+(23,'Art and Architecture','Từ vựng về nghệ thuật, thiết kế và kiến trúc.','INTERMEDIATE',23,1,1),
+(24,'Language and Linguistics','Từ vựng về ngôn ngữ, giao tiếp và học ngoại ngữ.','ADVANCED',24,1,1),
+(25,'Climate Change','Từ vựng về khí hậu, phát thải và giải pháp ứng phó.','ADVANCED',25,1,1);
+
+INSERT INTO vocabulary_terms(id,topic_id,word,ipa,meaning_vi,definition_en,example_en,example_vi,audio_media_id) VALUES
+(1,1,'appointment','/əˈpɔɪntmənt/','cuộc hẹn','an arrangement to meet someone at a particular time','I have an appointment with the regional manager at ten.','Tôi có cuộc hẹn với quản lý khu vực lúc mười giờ.',NULL),
+(2,1,'agenda','/əˈdʒendə/','chương trình nghị sự','a list of items to be discussed at a meeting','The agenda was sent to all participants yesterday.','Chương trình nghị sự đã được gửi cho tất cả người tham dự hôm qua.',NULL),
+(3,1,'deadline','/ˈdedlaɪn/','hạn chót','the latest time by which something must be completed','Please submit the expense report before the deadline.','Vui lòng nộp báo cáo chi phí trước hạn chót.',NULL),
+(4,1,'department','/dɪˈpɑːrtmənt/','phòng ban','a section of an organization responsible for a particular activity','The accounting department moved to the third floor.','Phòng kế toán đã chuyển lên tầng ba.',NULL),
+(5,1,'colleague','/ˈkɑːliːɡ/','đồng nghiệp','a person with whom one works','A colleague will cover the reception desk this afternoon.','Một đồng nghiệp sẽ trực quầy lễ tân chiều nay.',NULL),
+(6,2,'airline','/ˈerlaɪn/','hãng hàng không','a company that provides air transport for passengers or cargo','The airline added a direct flight to Osaka.','Hãng hàng không đã bổ sung chuyến bay thẳng đến Osaka.',NULL),
+(7,2,'flight','/flaɪt/','chuyến bay','a journey made by aircraft','Our flight departs from Gate 12 at 8:30.','Chuyến bay của chúng tôi khởi hành từ Cổng 12 lúc 8 giờ 30.',NULL),
+(8,2,'airport','/ˈerpɔːrt/','sân bay','a place where aircraft take off and land','Please arrive at the airport two hours before departure.','Vui lòng đến sân bay hai giờ trước giờ khởi hành.',NULL),
+(9,2,'passport','/ˈpæspɔːrt/','hộ chiếu','an official document used to identify a traveler internationally','Keep your passport in a secure place during the trip.','Hãy cất hộ chiếu ở nơi an toàn trong suốt chuyến đi.',NULL),
+(10,2,'ticket','/ˈtɪkɪt/','vé','a document that gives the holder permission to travel or enter an event','You can collect your train ticket at the station kiosk.','Bạn có thể nhận vé tàu tại quầy tự động trong nhà ga.',NULL),
+(11,3,'price','/praɪs/','giá','the amount of money required to buy something','The store reduced the price of selected appliances.','Cửa hàng đã giảm giá một số thiết bị gia dụng.',NULL),
+(12,3,'cashier','/kæˈʃɪr/','thu ngân','a person who receives payments in a store','The cashier issued a receipt for the purchase.','Thu ngân đã xuất biên lai cho giao dịch mua hàng.',NULL),
+(13,3,'delivery','/dɪˈlɪvəri/','việc giao hàng','the act of bringing goods to a customer','Free delivery is available for orders over fifty dollars.','Miễn phí giao hàng cho đơn đặt hàng trên năm mươi đô la.',NULL),
+(14,3,'sale','/seɪl/','đợt giảm giá','an occasion when goods are sold at reduced prices','The store will hold a clearance sale this weekend.','Cửa hàng sẽ tổ chức đợt giảm giá thanh lý vào cuối tuần này.',NULL),
+(15,3,'vendor','/ˈvendər/','nhà cung cấp','a person or company that sells goods or services','The vendor delivered the supplies to the warehouse.','Nhà cung cấp đã giao vật tư đến kho.',NULL),
+(16,2,'departure','/dɪˈpɑːrtʃər/','sự khởi hành','the act of leaving a place','Passengers should arrive at the terminal before departure.','Hành khách nên đến nhà ga trước giờ khởi hành.',NULL),
+(17,2,'arrival','/əˈraɪvəl/','sự đến nơi','the act of reaching a destination','The arrival of the train was delayed by fifteen minutes.','Chuyến tàu đến nơi muộn mười lăm phút.',NULL),
+(18,2,'destination','/ˌdestɪˈneɪʃən/','điểm đến','the place to which someone or something is going','Our final destination is a small town near the coast.','Điểm đến cuối cùng của chúng tôi là một thị trấn nhỏ gần bờ biển.',NULL),
+(19,2,'itinerary','/aɪˈtɪnəreri/','lịch trình chuyến đi','a plan of a journey, including the route and places visited','The travel agent emailed us a detailed itinerary.','Đại lý du lịch đã gửi cho chúng tôi lịch trình chi tiết.',NULL),
+(20,2,'accommodation','/əˌkɑːməˈdeɪʃən/','chỗ ở','a place where travelers can stay','We booked affordable accommodation close to the station.','Chúng tôi đã đặt chỗ ở giá hợp lý gần nhà ga.',NULL),
+(21,2,'reservation','/ˌrezərˈveɪʃən/','sự đặt chỗ','an arrangement to have a seat, room, or service kept for someone','Please confirm your hotel reservation before you travel.','Vui lòng xác nhận đặt phòng khách sạn trước khi đi.',NULL),
+(22,2,'boarding pass','/ˈbɔːrdɪŋ pæs/','thẻ lên máy bay','a document that allows a passenger to board an aircraft','Keep your boarding pass ready at the departure gate.','Hãy chuẩn bị sẵn thẻ lên máy bay tại cửa khởi hành.',NULL),
+(23,2,'luggage','/ˈlʌɡɪdʒ/','hành lý','bags and cases carried by a traveler','Her luggage was placed in the overhead compartment.','Hành lý của cô ấy được đặt vào ngăn chứa phía trên.',NULL),
+(24,2,'baggage allowance','/ˈbæɡɪdʒ əˌlaʊəns/','lượng hành lý được phép mang','the amount of luggage a passenger may carry without an extra charge','Check the baggage allowance before packing your suitcase.','Hãy kiểm tra lượng hành lý được phép mang trước khi đóng vali.',NULL),
+(25,2,'layover','/ˈleɪˌoʊvər/','thời gian quá cảnh','a period of waiting between connecting parts of a journey','We have a two-hour layover in Singapore.','Chúng tôi quá cảnh hai giờ ở Singapore.',NULL),
+(26,2,'transfer','/ˈtrænsfər/','sự chuyển tuyến','a change from one vehicle or route to another','The ticket includes a transfer to the airport bus.','Vé bao gồm một lượt chuyển sang xe buýt sân bay.',NULL),
+(27,2,'commute','/kəˈmjuːt/','đi lại thường xuyên','to travel regularly between home and work or school','She commutes to work by train every weekday.','Cô ấy đi tàu đến nơi làm việc mỗi ngày trong tuần.',NULL),
+(28,2,'subway','/ˈsʌbweɪ/','tàu điện ngầm','an underground urban railway system','The subway is the fastest way to cross the city center.','Tàu điện ngầm là cách nhanh nhất để đi qua trung tâm thành phố.',NULL),
+(29,2,'platform','/ˈplætfɔːrm/','sân ga','the raised area beside a railway track where passengers wait','The express train will depart from platform four.','Tàu tốc hành sẽ khởi hành từ sân ga số bốn.',NULL),
+(30,2,'fare','/fer/','giá vé','the money paid for a journey on public transport','You can pay the bus fare with a contactless card.','Bạn có thể trả tiền vé xe buýt bằng thẻ không tiếp xúc.',NULL);
+
+INSERT INTO vocabulary_lessons(topic_id,title,description,sort_order,target_word_count,is_published,created_by)
+SELECT t.id, CONCAT(t.title, ' — Nền tảng'), 'Học nhóm từ vựng cốt lõi và ví dụ theo chủ đề.', 1, 10, 1, 1
+FROM vocabulary_topics t WHERE t.is_published=1;
+INSERT INTO vocabulary_lessons(topic_id,title,description,sort_order,target_word_count,is_published,created_by)
+SELECT t.id, CONCAT(t.title, ' — Mở rộng'), 'Mở rộng vốn từ và luyện tập theo ngữ cảnh.', 2, 20, 1, 1
+FROM vocabulary_topics t WHERE t.is_published=1;
+INSERT INTO vocabulary_lessons(topic_id,title,description,sort_order,target_word_count,is_published,created_by)
+SELECT t.id, CONCAT(t.title, ' — Nâng cao'), 'Ôn tập chuyên sâu với bộ từ vựng nâng cao.', 3, 36, 1, 1
+FROM vocabulary_topics t WHERE t.is_published=1;
+UPDATE vocabulary_lessons
+SET target_word_count=20
+WHERE topic_id=(SELECT id FROM vocabulary_topics WHERE title='Travel and Transport');
+INSERT INTO vocabulary_lesson_terms(lesson_id,term_id,sort_order)
+SELECT l.id, t.id, ROW_NUMBER() OVER (PARTITION BY l.id ORDER BY t.id)
+FROM vocabulary_lessons l
+JOIN vocabulary_terms t ON t.topic_id=l.topic_id;
 -- Bổ sung đủ 12 thì (bài 9–16). Nội dung và câu hỏi biên soạn cho TOEIC.
 INSERT INTO grammar_lessons(id, topic_id, title, content_html, level, sort_order, is_published) VALUES (9, 1, 'Hiện tại hoàn thành tiếp diễn (Present Perfect Continuous)', '<p data-n11="summary">Hoạt động kéo dài tới hiện tại hoặc vừa dừng và còn dấu hiệu.</p><section data-n11="lecture"><h3>Cách dùng</h3><p>Đặt trọng tâm vào quá trình. Khi nhấn mạnh số việc đã hoàn tất, thường dùng hiện tại hoàn thành đơn.</p><h3>Công thức</h3><ul><li>Khẳng định: <strong>S + have/has been + V-ing</strong></li><li>Phủ định: <strong>S + have/has + not + been V-ing</strong></li><li>Câu hỏi: <strong>Have/Has + S + been + V-ing?</strong></li></ul><h3>Nhận biết trong TOEIC</h3><p>for + khoảng thời gian, since + mốc bắt đầu, all morning. Đọc cả câu để xác định hoạt động có nối với hiện tại.</p><p><em>S: chủ ngữ. V3: quá khứ phân từ.</em></p></section><section data-n11="examples"><article data-example-id="1" data-order="1"><p class="sentence">The support team has been answering calls since 8 a.m.</p><p class="translation">Nhóm hỗ trợ đã liên tục trả lời điện thoại từ 8 giờ sáng.</p><p class="note">Since giới thiệu thời điểm bắt đầu.</p></article><article data-example-id="2" data-order="2"><p class="sentence">I have been checking invoices all morning.</p><p class="translation">Tôi đã kiểm tra hóa đơn suốt buổi sáng.</p><p class="note">Trọng tâm là quá trình kiểm tra.</p></article><article data-example-id="3" data-order="3"><p class="sentence">Have you been waiting long?</p><p class="translation">Bạn đã đợi lâu chưa?</p><p class="note">Đưa have lên trước chủ ngữ để hỏi.</p></article></section>', 'INTERMEDIATE', 9, 1);
 INSERT INTO grammar_questions(id, lesson_id, question_text, explanation, difficulty, sort_order) VALUES (41, 9, 'The technician _____ the printer since 9 a.m. and is still working on it.', 'Since và is still working cho thấy hoạt động kéo dài đến hiện tại.', 2, 1);
@@ -7121,7 +7250,8 @@ INSERT INTO practice_sets(skill,part_no,title,instructions,difficulty,is_publish
 INSERT INTO practice_sets(skill,part_no,title,instructions,difficulty,is_published) SELECT 'READING',5,'Part 5 — Cấp 3 · Trung bình','[READING_PART5_LEVEL:3] Học liệu N11 biên soạn. Chọn đáp án đúng để hoàn thành câu.','MEDIUM',TRUE WHERE NOT EXISTS (SELECT 1 FROM practice_sets WHERE skill='READING' AND part_no=5 AND instructions LIKE '[READING_PART5_LEVEL:3]%');
 INSERT INTO practice_sets(skill,part_no,title,instructions,difficulty,is_published) SELECT 'READING',5,'Part 5 — Cấp 4 · Khó','[READING_PART5_LEVEL:4] Học liệu N11 biên soạn. Chọn đáp án đúng để hoàn thành câu.','HARD',TRUE WHERE NOT EXISTS (SELECT 1 FROM practice_sets WHERE skill='READING' AND part_no=5 AND instructions LIKE '[READING_PART5_LEVEL:4]%');
 INSERT INTO practice_sets(skill,part_no,title,instructions,difficulty,is_published) SELECT 'READING',5,'Part 5 — Cấp 5 · Rất khó','[READING_PART5_LEVEL:5] Học liệu N11 biên soạn. Chọn đáp án đúng để hoàn thành câu.','HARD',TRUE WHERE NOT EXISTS (SELECT 1 FROM practice_sets WHERE skill='READING' AND part_no=5 AND instructions LIKE '[READING_PART5_LEVEL:5]%');
-INSERT INTO vocabulary_topics(title,description,level,is_published) SELECT 'N11 Reading Part 5','Từ vựng trong bộ luyện Reading Part 5 của N11.','INTERMEDIATE',TRUE WHERE NOT EXISTS(SELECT 1 FROM vocabulary_topics WHERE title='N11 Reading Part 5');
+INSERT INTO vocabulary_topics(title,description,level,is_published) SELECT 'N11 Reading Part 5','Từ vựng trong bộ luyện Reading Part 5 của N11.','INTERMEDIATE',FALSE WHERE NOT EXISTS(SELECT 1 FROM vocabulary_topics WHERE title='N11 Reading Part 5');
+UPDATE vocabulary_topics SET is_published=FALSE WHERE title='N11 Reading Part 5' AND description='Từ vựng trong bộ luyện Reading Part 5 của N11.' AND is_published=TRUE;
 INSERT INTO vocabulary_terms(topic_id,word,ipa,meaning_vi,example_en,example_vi) SELECT (SELECT id FROM vocabulary_topics WHERE title='N11 Reading Part 5' ORDER BY id LIMIT 1),'employees','/ɪmˈplɔɪiːz/','nhân viên (số nhiều)','Employees attend training every month.','Nhân viên tham gia đào tạo hằng tháng.' WHERE NOT EXISTS(SELECT 1 FROM vocabulary_terms WHERE topic_id=(SELECT id FROM vocabulary_topics WHERE title='N11 Reading Part 5' ORDER BY id LIMIT 1) AND word='employees');
 INSERT INTO vocabulary_terms(topic_id,word,ipa,meaning_vi,example_en,example_vi) SELECT (SELECT id FROM vocabulary_topics WHERE title='N11 Reading Part 5' ORDER BY id LIMIT 1),'employee','/ɪmˈplɔɪiː/','nhân viên','Each employee receives a badge.','Mỗi nhân viên nhận một thẻ.' WHERE NOT EXISTS(SELECT 1 FROM vocabulary_terms WHERE topic_id=(SELECT id FROM vocabulary_topics WHERE title='N11 Reading Part 5' ORDER BY id LIMIT 1) AND word='employee');
 INSERT INTO vocabulary_terms(topic_id,word,ipa,meaning_vi,example_en,example_vi) SELECT (SELECT id FROM vocabulary_topics WHERE title='N11 Reading Part 5' ORDER BY id LIMIT 1),'machinery','/məˈʃiːnəri/','máy móc (danh từ không đếm được)','Keep the machinery clean.','Giữ máy móc sạch sẽ.' WHERE NOT EXISTS(SELECT 1 FROM vocabulary_terms WHERE topic_id=(SELECT id FROM vocabulary_topics WHERE title='N11 Reading Part 5' ORDER BY id LIMIT 1) AND word='machinery');

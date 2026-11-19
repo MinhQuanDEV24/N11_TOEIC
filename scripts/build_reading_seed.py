@@ -189,7 +189,8 @@ def main():
         sql.append(f"INSERT INTO practice_sets(skill,part_no,title,instructions,difficulty,is_published) SELECT 'READING',5,{quote('Part 5 — Cấp '+str(level)+' · '+label)},{quote(marker+' Học liệu N11 biên soạn. Chọn đáp án đúng để hoàn thành câu.')},{quote(difficulty)},TRUE WHERE NOT EXISTS (SELECT 1 FROM practice_sets WHERE {where});")
     title = quote('N11 Reading Part 5')
     topic = f'(SELECT id FROM vocabulary_topics WHERE title={title} ORDER BY id LIMIT 1)'
-    sql.append(f"INSERT INTO vocabulary_topics(title,description,level,is_published) SELECT {title},'Từ vựng trong bộ luyện Reading Part 5 của N11.','INTERMEDIATE',TRUE WHERE NOT EXISTS(SELECT 1 FROM vocabulary_topics WHERE title={title});")
+    sql.append(f"INSERT INTO vocabulary_topics(title,description,level,is_published) SELECT {title},'Từ vựng trong bộ luyện Reading Part 5 của N11.','INTERMEDIATE',FALSE WHERE NOT EXISTS(SELECT 1 FROM vocabulary_topics WHERE title={title});")
+    sql.append(f"UPDATE vocabulary_topics SET is_published=FALSE WHERE title={title} AND description='Từ vựng trong bộ luyện Reading Part 5 của N11.' AND is_published=TRUE;")
     for word, ipa, meaning, en, vi in VOCABULARY:
         sql.append(f"INSERT INTO vocabulary_terms(topic_id,word,ipa,meaning_vi,example_en,example_vi) SELECT {topic},{quote(word)},{quote(ipa)},{quote(meaning)},{quote(en)},{quote(vi)} WHERE NOT EXISTS(SELECT 1 FROM vocabulary_terms WHERE topic_id={topic} AND word={quote(word)});")
     vocabulary = {v[0] for v in VOCABULARY}

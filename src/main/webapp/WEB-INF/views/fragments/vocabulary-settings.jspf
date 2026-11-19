@@ -1,0 +1,44 @@
+<div class="vocab-user-toolbar"
+     data-vocab-settings
+     data-signed-in="${not empty userEmail}"
+     data-settings-url="${pageContext.request.contextPath}/vocabulary/preferences"
+     data-csrf-header="${_csrf.headerName}"
+     data-csrf-token="${_csrf.token}">
+  <c:choose>
+    <c:when test="${not empty userEmail}">
+      <div class="vocab-account-chip">
+        <span class="vocab-account-avatar" aria-hidden="true">●</span>
+        <span><strong><c:out value="${userEmail}"/></strong><small>
+          <c:choose><c:when test="${pageContext.request.isUserInRole('ADMIN')}"><span data-i18n="adminRole">Quản trị viên</span></c:when><c:otherwise><span data-i18n="learnerRole">Học viên</span></c:otherwise></c:choose>
+        </small></span>
+      </div>
+    </c:when>
+    <c:otherwise>
+      <a class="vocab-account-chip" href="${pageContext.request.contextPath}/login" data-i18n="signInSync">Đăng nhập để đồng bộ tiến độ</a>
+    </c:otherwise>
+  </c:choose>
+
+  <details class="vocab-settings">
+    <summary data-i18n="settings">⚙ Cài đặt hiển thị</summary>
+    <div class="vocab-settings-panel">
+      <label for="vocab-theme" data-i18n="theme">Giao diện</label>
+      <select id="vocab-theme" data-setting="theme">
+        <option value="LIGHT" ${preferences.theme eq 'LIGHT' ? 'selected' : ''}>Sáng / Light</option>
+        <option value="DARK" ${preferences.theme eq 'DARK' ? 'selected' : ''}>Tối / Dark</option>
+      </select>
+      <label for="vocab-font-size" data-i18n="fontSize">Cỡ chữ</label>
+      <select id="vocab-font-size" data-setting="fontSize">
+        <option value="SMALL" ${preferences.fontSize eq 'SMALL' ? 'selected' : ''}>Nhỏ / Small</option>
+        <option value="MEDIUM" ${preferences.fontSize eq 'MEDIUM' ? 'selected' : ''}>Vừa / Medium</option>
+        <option value="LARGE" ${preferences.fontSize eq 'LARGE' ? 'selected' : ''}>Lớn / Large</option>
+      </select>
+      <label for="vocab-language" data-i18n="language">Ngôn ngữ</label>
+      <select id="vocab-language" data-setting="language">
+        <option value="VI" ${preferences.language eq 'VI' ? 'selected' : ''}>Tiếng Việt</option>
+        <option value="EN" ${preferences.language eq 'EN' ? 'selected' : ''}>English</option>
+      </select>
+      <button class="vocab-primary-btn" type="button" data-save-settings data-i18n="saveSettings">Lưu cài đặt</button>
+      <span class="vocab-settings-status" data-settings-status role="status" aria-live="polite"></span>
+    </div>
+  </details>
+</div>
