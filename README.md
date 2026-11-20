@@ -4,8 +4,42 @@ Spring Boot 4.1.2, Java 25+, MySQL 8+, JSP/JSTL, Bootstrap 5 và JDBC (`JdbcTemp
 
 ## Chạy ứng dụng
 
-1. Mở **thư mục chứa `pom.xml` này** trong IntelliJ hoặc terminal.
-2. Với MySQL trống, chọn **một** trong hai cách nạp:
+Yêu cầu chung: **JDK 25**. Maven Wrapper đã có trong repository, không cần cài Maven.
+
+### Chạy nhanh trên IntelliJ IDEA bằng H2
+
+1. Clone repository và mở thư mục chứa `pom.xml` bằng IntelliJ IDEA.
+2. Chờ IntelliJ hoàn tất **Load Maven Project**.
+3. Mở **Run → Edit Configurations**.
+4. Thêm cấu hình **Spring Boot**:
+   - Main class: `com.toeic.nhom11.Nhom11Application`
+   - Working directory: thư mục gốc repository
+   - Active profiles: `dev`
+5. Chạy cấu hình và truy cập [http://localhost:8080/vocabulary](http://localhost:8080/vocabulary).
+
+Profile `dev` dùng H2 trong bộ nhớ và tự nạp `database/seed.sql`.
+Các thành viên không cần cài MySQL để chạy và demo;
+profile này không thay đổi CSDL MySQL của nhóm.
+
+Có thể chạy trực tiếp bằng terminal:
+
+```powershell
+# Windows PowerShell
+.\mvnw.cmd "-Dspring-boot.run.useTestClasspath=true" `
+  "-Dspring-boot.run.arguments=--server.port=8080" `
+  "-Dspring-boot.run.profiles=dev" spring-boot:run
+```
+
+```bash
+# macOS/Linux
+sh ./mvnw -Dspring-boot.run.useTestClasspath=true \
+  -Dspring-boot.run.arguments=--server.port=8080 \
+  -Dspring-boot.run.profiles=dev spring-boot:run
+```
+
+### Chạy với MySQL của nhóm
+
+1. Với MySQL trống, chọn **một** trong hai cách nạp:
 
    ```sql
    -- Cách A: schema và dữ liệu demo gộp
@@ -17,14 +51,15 @@ Spring Boot 4.1.2, Java 25+, MySQL 8+, JSP/JSTL, Bootstrap 5 và JDBC (`JdbcTemp
    ```
 
    `n11_toeic.sql` đã gồm dữ liệu demo. Với cách B, `seed.sql` dùng ID cố định nên chỉ chạy trên database trống. Không chạy cả hai cách trên cùng database. Nếu nhóm đã có CSDL và tài khoản, không import đè seed. `CREATE TABLE IF NOT EXISTS` không cập nhật cấu trúc bảng cũ.
-3. Sao chép `application-local.properties.example` thành `application-local.properties` và điền thông tin MySQL. File này đã được Git bỏ qua. Hoặc dùng biến môi trường `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`.
-4. Chạy:
+2. Sao chép `application-local.properties.example` thành `application-local.properties` và điền thông tin MySQL. File này đã được Git bỏ qua. Hoặc dùng biến môi trường `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`.
+3. Chạy:
 
    ```powershell
-   mvn spring-boot:run
+   .\mvnw.cmd spring-boot:run
    ```
 
-5. Mở [Từ vựng](http://localhost:8080/vocabulary), [Ngữ pháp](http://localhost:8080/grammar) hoặc [Quản trị ngữ pháp](http://localhost:8080/admin/grammar).
+   Trên macOS/Linux dùng `sh ./mvnw spring-boot:run`.
+4. Mở [Từ vựng](http://localhost:8080/vocabulary), [Ngữ pháp](http://localhost:8080/grammar) hoặc [Quản trị ngữ pháp](http://localhost:8080/admin/grammar).
 
 ## Học Từ Vựng
 
@@ -69,10 +104,12 @@ Module Từ Vựng (`/vocabulary`) hỗ trợ lộ trình theo chủ đề, tr�
 ## Kiểm thử và đóng gói
 
 ```powershell
-mvn test
-mvn package
+.\mvnw.cmd test
+.\mvnw.cmd package
 java -jar target/nhom11-0.0.1-SNAPSHOT.war
 ```
+
+Trên macOS/Linux, thay `.\mvnw.cmd` bằng `sh ./mvnw`.
 
 Chạy lệnh tại thư mục repo để đọc được file cấu hình cục bộ. Bản WAR chạy nhúng Tomcat hỗ trợ JSP. Test mặc định dùng H2 độc lập, không ghi vào MySQL. Bộ test cũng đã được chạy với MySQL 8.4 theo schema nhóm; xem [hướng dẫn kiểm thử](docs/TESTING.md).
 
