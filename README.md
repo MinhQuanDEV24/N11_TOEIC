@@ -70,7 +70,8 @@ sh ./mvnw -Dspring-boot.run.profiles=dev spring-boot:run
 - Pull nhánh nhóm đang làm việc bằng `git pull` sau khi checkout đúng nhánh.
 - Với database trống, chạy `database/schema.sql` rồi chạy một lần `database/seed.sql`. `spring.sql.init.mode=always` chỉ tạo schema; ứng dụng không tự nạp seed khi khởi động.
 - Với database đã có dữ liệu từ schema cũ, chạy lần lượt các script trong `database/updates/` theo thứ tự trước khi chạy phiên bản mới. Không chạy migration trên database vừa tạo bằng `database/schema.sql`.
-- Bộ seed hiện có 25 chủ đề và ba bài học cho mỗi chủ đề. Chủ đề Travel and Transport có 20 từ ở cả ba cấp độ; các chủ đề còn lại vẫn đang chờ nhập bộ từ đầy đủ.
+- Bộ seed hiện có 25 chủ đề, ba bài học cho mỗi chủ đề và ít nhất 30 từ ở từng chủ đề. Ba bài được phân bố 10/20/30 từ theo chặng nền tảng, mở rộng và nâng cao.
+- `database/updates/006_vocabulary_minimum_thirty_words.sql` là migration idempotent cho database nhóm đã tồn tại; chạy sau các migration 003–005, không cần nhập tay từng từ.
 - Tài khoản demo `student@n11.local` / `admin@n11.local`, mật khẩu `N11@Demo2026`, chỉ có sau khi nạp seed trên database trống. Danh sách chủ đề có thể xem khi chưa đăng nhập; làm bài kiểm tra và đồng bộ tiến độ yêu cầu đăng nhập.
 
 Trên máy đang triển khai, `application-local.yaml` trỏ đến **`n11_toeic_team`**, bản thử riêng theo đúng CSDL mới. Database `n11_toeic` tạo ở lần thử trước được giữ nguyên và không còn được ứng dụng sử dụng. Khi tích hợp, cấu hình kết nối tới database chung đã có schema của nhóm.
@@ -101,7 +102,7 @@ Module Từ Vựng (`/vocabulary`) hỗ trợ lộ trình theo chủ đề, tr�
 - `database/schema.sql`: cùng các định nghĩa bảng, không gắn tên database.
 - `database/seed.sql`: học liệu mẫu và hai tài khoản demo, chỉ dùng bảng/cột đã có.
 - `database/n11_toeic.sql`: bản schema MySQL đầy đủ kèm dữ liệu demo.
-- `database/updates/003_vocabulary_learning_path.sql` đến `005_travel_topic_twenty_words.sql`: migration tuần tự cho database cũ; chỉ chạy mỗi migration một lần.
+- `database/updates/003_vocabulary_learning_path.sql` đến `006_vocabulary_minimum_thirty_words.sql`: migration tuần tự cho database cũ; chạy 006 sau 003–005 để bảo đảm mỗi chủ đề ít nhất 30 từ.
 - Không thêm `grammar_examples`, `summary`, `lesson_title` hay cột lưu bản sao câu trả lời.
 - Ví dụ và mô tả ngắn nằm trong `grammar_lessons.content_html`; xem [quy ước lưu nội dung](docs/CSDL_INTEGRATION.md).
 
