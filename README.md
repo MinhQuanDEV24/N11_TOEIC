@@ -17,6 +17,14 @@ Yêu cầu chung: **JDK 25**. Maven Wrapper đã có trong repository, không c�
    - Active profiles: `dev`
 5. Chạy cấu hình và truy cập [http://localhost:8080/vocabulary](http://localhost:8080/vocabulary).
 
+### Chạy nhanh trên Visual Studio Code bằng H2
+
+1. Cài extension **Debugger for Java**, **Extension Pack for Java** và một trình duyệt như Chrome.
+2. Mở thư mục gốc chứa `pom.xml`.
+3. Mở **Run and Debug**, chọn `Chạy N11 TOEIC với H2`, rồi nhấn **F5**.
+4. VS Code tự chạy Maven Wrapper với profile `dev` và mở
+   [http://localhost:8080/vocabulary](http://localhost:8080/vocabulary).
+
 Profile `dev` dùng H2 trong bộ nhớ và tự nạp `database/seed.sql`.
 Các thành viên không cần cài MySQL để chạy và demo;
 profile này không thay đổi CSDL MySQL của nhóm.
@@ -25,16 +33,12 @@ Có thể chạy trực tiếp bằng terminal:
 
 ```powershell
 # Windows PowerShell
-.\mvnw.cmd "-Dspring-boot.run.useTestClasspath=true" `
-  "-Dspring-boot.run.arguments=--server.port=8080" `
-  "-Dspring-boot.run.profiles=dev" spring-boot:run
+.\mvnw.cmd "-Dspring-boot.run.profiles=dev" spring-boot:run
 ```
 
 ```bash
 # macOS/Linux
-sh ./mvnw -Dspring-boot.run.useTestClasspath=true \
-  -Dspring-boot.run.arguments=--server.port=8080 \
-  -Dspring-boot.run.profiles=dev spring-boot:run
+sh ./mvnw -Dspring-boot.run.profiles=dev spring-boot:run
 ```
 
 ### Chạy với MySQL của nhóm
